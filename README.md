@@ -1,4 +1,4 @@
-# Six-person research lab
+# Ramsey six-person party problem
 
 A small, reproducible example of agent-assisted mathematical research, with an interactive visualization and a complete proof.
 
