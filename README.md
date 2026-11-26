@@ -2,6 +2,8 @@
 
 A small, reproducible example of agent-assisted mathematical research, with an interactive visualization and a complete proof.
 
+**[Play the walkthrough in your browser](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no checkout, download, or installation needed.
+
 **Problem:** What is the smallest number of people that guarantees either three mutual acquaintances or three mutual strangers? Relationships are mutual, and every pair is classified into exactly one of these categories.
 
 **Answer: 6**, the classical Ramsey number R(3,3). This repository demonstrates an established theorem; it does not claim a new result or a solution to an open problem.
@@ -29,7 +31,7 @@ Here, Ben, Cara, and Dan are all strangers to each other. Their three dashed con
 
 ## Explore
 
-Open `index.html` in a modern browser. No server or installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
+Click **[Play the walkthrough](https://deepujain.github.io/ramsey-six-person-party-problem/)** to run it immediately in your browser. For offline use, download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser. No installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
 
 The editable source is `six-person-lab.html`; `index.html` is its standalone export, including presentation support. The fragment can also render inline in Codex.
 
