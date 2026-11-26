@@ -39,12 +39,12 @@ For offline use, download [index.html](https://github.com/deepujain/ramsey-six-p
 
 This project used a lead Codex agent and three parallel worker agents to investigate a known theorem.
 
-| Agent | Role | Contribution |
+| Role | Agent | Contribution |
 | --- | --- | --- |
-| Lead | Coordinate and assemble | Combined the findings, wrote the final explanation, and built the visualization and standalone verifier. |
-| `proof` | Develop and inspect proofs | Derived the six-person proof and identified a faulty majority argument for five people. |
-| `counterexample` | Challenge the proposed threshold | Constructed the five-person example that avoids both kinds of trio. |
-| `enumeration` | Independently check by computation | Enumerated relationship assignments, confirming 12 avoiding examples for five people and none for six. |
+| Research Lead | Lead agent | Coordinated the investigation and combined the findings; also built the final explanation, visualization, and standalone verifier. |
+| Mathematician | `proof` | Derived the six-person proof and identified a faulty majority argument for five people. |
+| Mathematical Reviewer | `counterexample` | Tested whether five people could suffice and constructed the example that disproves that claim. |
+| Research Software Engineer | `enumeration` | Independently enumerated relationship assignments, confirming 12 avoiding examples for five people and none for six. |
 
 This was one round of parallel investigation, followed by synthesis. It did **not** run the proposed autonomous shepherd workflow with ten competing approaches, hourly reviews, pruning, and repeated branching. Separate agent roles do not establish independent models or independent reasoning errors. Model variants and reasoning levels were not recorded in the investigation record, so none are attributed here.
 
