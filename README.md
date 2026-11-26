@@ -1,6 +1,6 @@
 # Ramsey six-person party problem
 
-A small, reproducible example of agent-assisted mathematical research, with a single-page visual explanation and a complete proof.
+A small, reproducible example of agent-assisted mathematical investigation, with a single-page visual explanation and a complete proof.
 
 **[Open the visual explanation](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no checkout, download, or installation needed.
 
@@ -34,6 +34,21 @@ The two examples are visible together. Five can avoid both kinds of group. Six a
 **[Open the visual explanation](https://deepujain.github.io/ramsey-six-person-party-problem/)**. The question, answer, and comparison are visible together. There are no steps, Next/Back buttons, relationship selectors, or required clicks. An optional link leads to the full proof.
 
 For offline use, download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser. This standalone file is both the source and the runnable page. It needs no libraries, installation, or build step.
+
+## Agents and roles used
+
+This project used a lead Codex agent and three parallel worker agents to investigate a known theorem.
+
+| Agent | Role | Contribution |
+| --- | --- | --- |
+| Lead | Coordinate and assemble | Combined the findings, wrote the final explanation, and built the visualization and standalone verifier. |
+| `proof` | Develop and inspect proofs | Derived the six-person proof and identified a faulty majority argument for five people. |
+| `counterexample` | Challenge the proposed threshold | Constructed the five-person example that avoids both kinds of trio. |
+| `enumeration` | Independently check by computation | Enumerated relationship assignments, confirming 12 avoiding examples for five people and none for six. |
+
+This was one round of parallel investigation, followed by synthesis. It did **not** run the proposed autonomous shepherd workflow with ten competing approaches, hourly reviews, pruning, and repeated branching. Separate agent roles do not establish independent models or independent reasoning errors. Model variants and reasoning levels were not recorded in the investigation record, so none are attributed here.
+
+See [RESEARCH.md](RESEARCH.md) for the hypotheses, rejected approach, and findings. This demonstrates an established result, rather than new mathematical research.
 
 ## Reproduce the computation
 
