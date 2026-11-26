@@ -1,8 +1,8 @@
 # Ramsey six-person party problem
 
-A small, reproducible example of agent-assisted mathematical research, with an interactive visualization and a complete proof.
+A small, reproducible example of agent-assisted mathematical research, with a single-page visual explanation and a complete proof.
 
-**[Play the walkthrough in your browser](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no checkout, download, or installation needed.
+**[Open the visual explanation](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no checkout, download, or installation needed.
 
 **Problem:** What is the smallest number of people that guarantees either three mutual acquaintances or three mutual strangers? Relationships are mutual, and every pair is classified into exactly one of these categories.
 
@@ -23,17 +23,17 @@ The answer is **six**. With five people, it's possible to avoid both kinds of gr
 
 In the visualization, each dot is a person. Solid lines mean "know each other"; dashed lines mean "strangers." You're looking for a triangle made of **three solid lines or three dashed lines**.
 
-## Visual walkthrough
+## Visual answer
 
-![The walkthrough highlights Ben, Cara, and Dan connected by three dashed lines, meaning all three are strangers to each other.](docs/images/party-problem-walkthrough.png)
+![Five people with no matching trio, next to six people with Amy, Cara, and Fay highlighted as mutual strangers.](docs/images/party-problem-walkthrough.png)
 
-Here, Ben, Cara, and Dan are all strangers to each other. Their three dashed connections form one of the groups we are looking for.
+The two examples are visible together. Five can avoid both kinds of group. Six always guarantees one; Amy, Cara, and Fay are the example highlighted here.
 
 ## Explore
 
-Click **[Play the walkthrough](https://deepujain.github.io/ramsey-six-person-party-problem/)** to run it immediately in your browser. For offline use, download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser. No installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
+**[Open the visual explanation](https://deepujain.github.io/ramsey-six-person-party-problem/)**. The question, answer, and comparison are visible together. There are no steps, Next/Back buttons, relationship selectors, or required clicks. An optional link leads to the full proof.
 
-The editable source is `six-person-lab.html`; `index.html` is its standalone export, including presentation support. The fragment can also render inline in Codex.
+For offline use, download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser. This standalone file is both the source and the runnable page. It needs no libraries, installation, or build step.
 
 ## Reproduce the computation
 
@@ -64,4 +64,4 @@ With Playwright and its Chromium browser installed in your development environme
 node test_ui.cjs
 ```
 
-Set `CHROME_CHANNEL=chrome` to use an installed Google Chrome instead. The checks walk through all nine steps at phone and desktop widths, verify the example diagrams and navigation, and check for horizontal overflow and JavaScript errors. The visualization itself needs no dependencies.
+Set `CHROME_CHANNEL=chrome` to use an installed Google Chrome instead. The checks verify both diagrams and their relationship counts, confirm that no controls are required, and check for scrolling and JavaScript errors across phone, tablet, and desktop sizes. The visualization itself needs no dependencies.
