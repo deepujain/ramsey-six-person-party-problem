@@ -8,6 +8,8 @@ A small, reproducible example of agent-assisted mathematical investigation, with
 
 **Answer: 6**, the classical Ramsey number R(3,3). This repository demonstrates an established theorem; it does not claim a new result or a solution to an open problem.
 
+**Background:** [Wikipedia: Theorem on friends and strangers](https://en.wikipedia.org/wiki/Theorem_on_friends_and_strangers).
+
 ## The problem in simple words
 
 Imagine you invite people to a party. For every pair, they either **know each other** or **have never met**.
