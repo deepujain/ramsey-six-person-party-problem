@@ -1,6 +1,6 @@
 <div id="ramsey-party">
   <style>
-    #ramsey-party {display:flow-root;max-width:640px;margin:0 auto;color:var(--foreground)}
+    #ramsey-party {display:flow-root;max-width:1080px;margin:0 auto;color:var(--foreground)}
     #ramsey-party [hidden] {display:none !important}
     #ramsey-party .intro {max-width:64ch;margin:8px 0 12px}
     #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:10px 0}
@@ -9,10 +9,14 @@
     #ramsey-party .narration {min-height:88px}
     #ramsey-party .narration h3 {margin:8px 0}
     #ramsey-party .narration p {margin:8px 0;max-width:65ch}
-    #ramsey-party .picture {max-width:420px;margin:0 auto}
+    #ramsey-party .picture {width:100%;max-width:600px;margin:0 auto}
     #ramsey-party .graph {display:block;width:100%}
     #ramsey-party .graph text {fill:var(--foreground);font-weight:500}
     #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+    #ramsey-party .scene {display:grid;gap:8px;align-items:center}
+    @media (min-width:700px) {
+      #ramsey-party .scene {grid-template-columns:minmax(210px,.85fr) minmax(0,1.65fr);gap:28px}
+    }
     #ramsey-party .step {color:var(--muted-foreground)}
   </style>
   <h2>The party problem</h2>
@@ -30,6 +34,7 @@
     <span><span class="key"></span>These two know each other</span>
     <span><span class="key strangers"></span>These two are strangers</span>
   </div>
+  <div class="scene">
   <div class="narration" aria-live="polite">
     <div class="step text-small" id="rp-step"></div>
     <h3 id="rp-heading"></h3>
@@ -37,6 +42,7 @@
   </div>
   <div class="picture">
     <svg id="rp-graph" class="graph" role="img" aria-label="People at a party and whether each pair knows each other."></svg>
+  </div>
   </div>
   <p id="rp-fact" class="sr-only" aria-live="polite"></p>
   <div class="navigation">
@@ -81,6 +87,7 @@
       const opening=step<0;
       root.querySelector('h2').hidden=!opening;
       root.querySelector('.intro').hidden=!opening;
+      root.querySelector('.scene').hidden=opening;
       root.querySelector('.legend').hidden=opening;
       root.querySelector('.narration').hidden=opening;
       root.querySelector('.picture').hidden=opening;
@@ -88,12 +95,15 @@
       q('next').textContent=opening?'Show me an example':nextLabels[step];
       if(opening){svg.replaceChildren();return}
       const w=Math.max(260,Math.round(root.querySelector('.picture').getBoundingClientRect().width));
-      const h=210;
+      const wide=window.matchMedia('(min-width:700px)').matches;
+      const h=wide?Math.min(440,Math.round(w*.9)):w<340?210:260;
+      const nodeRadius=wide?27:24;
       svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.style.height=h+'px';svg.replaceChildren();
       const proof=step>=5&&step<=7;
       let pts;
-      if(proof)pts=[[w/2,22],[w*.16,92],[w/2,140],[w*.84,92],[w*.2,188],[w*.8,188]];
-      else {const r=Math.min(w*.36,h*.37);pts=Array.from({length:n},(_,i)=>[w/2+r*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+r*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
+      if(proof){const top=nodeRadius+4,bottom=h-nodeRadius-4,span=bottom-top;pts=[[w/2,top],[nodeRadius+8,top+span*.38],[w/2,top+span*.70],[w-nodeRadius-8,top+span*.38],[w*.23,bottom],[w*.77,bottom]]}
+      else if(n===3)pts=[[w/2,nodeRadius+8],[w-nodeRadius-10,h-nodeRadius-8],[nodeRadius+10,h-nodeRadius-8]];
+      else {const rx=w/2-nodeRadius-10,ry=h/2-nodeRadius-8;pts=Array.from({length:n},(_,i)=>[w/2+rx*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+ry*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
       let visible=pairs().map((_,i)=>i),active=null;
       const ts=triangles();
       if(step<=1)active=ts[0];
@@ -105,7 +115,7 @@
       visible.forEach(i=>{const [a,b]=pairs()[i],[x1,y1]=pts[a],[x2,y2]=pts[b];const hot=active&&active.ids.includes(i);const dim=active&&!hot||proof&&(a>3||b>3);
         el('line',{x1,y1,x2,y2,stroke:`var(--viz-series-${colors[i]?1:2})`,'stroke-width':hot?4:2,'stroke-dasharray':colors[i]?'none':'7 5',opacity:dim?'.22':'.95'});
       });
-      pts.forEach(([x,y],i)=>{el('circle',{cx:x,cy:y,r:20,fill:'var(--background)',stroke:'var(--border)','stroke-width':1});const t=el('text',{x,y:y+4,'text-anchor':'middle',class:'text-small'});t.textContent=proof&&i===0?'You':names[i]});
+      pts.forEach(([x,y],i)=>{el('circle',{cx:x,cy:y,r:nodeRadius,fill:'var(--background)',stroke:'var(--border)','stroke-width':1});const t=el('text',{x,y:y+4,'text-anchor':'middle'});t.textContent=proof&&i===0?'You':names[i]});
       q('step').textContent=`Step ${step+1} of ${lessons.length}`;q('heading').textContent=lessons[step][0];q('caption').textContent=lessons[step][1];
       q('back').disabled=false;q('next').textContent=nextLabels[step];
       let fact='';

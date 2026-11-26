@@ -23,7 +23,7 @@ In the visualization, each dot is a person. Solid lines mean "know each other"; 
 
 ## Explore
 
-Open `index.html` in a modern browser. No server or installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
+Open `index.html` in a modern browser. No server or installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
 
 The editable source is `six-person-lab.html`; `index.html` is its standalone export, including presentation support. The fragment can also render inline in Codex.
 

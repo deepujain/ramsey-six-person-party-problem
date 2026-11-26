@@ -1539,7 +1539,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 &lt;/script&gt;
 &lt;div id=&quot;ramsey-party&quot;&gt;
   &lt;style&gt;
-    #ramsey-party {display:flow-root;max-width:640px;margin:0 auto;color:var(--foreground)}
+    #ramsey-party {display:flow-root;max-width:1080px;margin:0 auto;color:var(--foreground)}
     #ramsey-party [hidden] {display:none !important}
     #ramsey-party .intro {max-width:64ch;margin:8px 0 12px}
     #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:10px 0}
@@ -1548,10 +1548,14 @@ html&gt;body{padding:0}&lt;/style&gt;
     #ramsey-party .narration {min-height:88px}
     #ramsey-party .narration h3 {margin:8px 0}
     #ramsey-party .narration p {margin:8px 0;max-width:65ch}
-    #ramsey-party .picture {max-width:420px;margin:0 auto}
+    #ramsey-party .picture {width:100%;max-width:600px;margin:0 auto}
     #ramsey-party .graph {display:block;width:100%}
     #ramsey-party .graph text {fill:var(--foreground);font-weight:500}
     #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+    #ramsey-party .scene {display:grid;gap:8px;align-items:center}
+    @media (min-width:700px) {
+      #ramsey-party .scene {grid-template-columns:minmax(210px,.85fr) minmax(0,1.65fr);gap:28px}
+    }
     #ramsey-party .step {color:var(--muted-foreground)}
   &lt;/style&gt;
   &lt;h2&gt;The party problem&lt;/h2&gt;
@@ -1569,6 +1573,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;span&gt;&lt;span class=&quot;key&quot;&gt;&lt;/span&gt;These two know each other&lt;/span&gt;
     &lt;span&gt;&lt;span class=&quot;key strangers&quot;&gt;&lt;/span&gt;These two are strangers&lt;/span&gt;
   &lt;/div&gt;
+  &lt;div class=&quot;scene&quot;&gt;
   &lt;div class=&quot;narration&quot; aria-live=&quot;polite&quot;&gt;
     &lt;div class=&quot;step text-small&quot; id=&quot;rp-step&quot;&gt;&lt;/div&gt;
     &lt;h3 id=&quot;rp-heading&quot;&gt;&lt;/h3&gt;
@@ -1576,6 +1581,7 @@ html&gt;body{padding:0}&lt;/style&gt;
   &lt;/div&gt;
   &lt;div class=&quot;picture&quot;&gt;
     &lt;svg id=&quot;rp-graph&quot; class=&quot;graph&quot; role=&quot;img&quot; aria-label=&quot;People at a party and whether each pair knows each other.&quot;&gt;&lt;/svg&gt;
+  &lt;/div&gt;
   &lt;/div&gt;
   &lt;p id=&quot;rp-fact&quot; class=&quot;sr-only&quot; aria-live=&quot;polite&quot;&gt;&lt;/p&gt;
   &lt;div class=&quot;navigation&quot;&gt;
@@ -1620,6 +1626,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       const opening=step&lt;0;
       root.querySelector(&#x27;h2&#x27;).hidden=!opening;
       root.querySelector(&#x27;.intro&#x27;).hidden=!opening;
+      root.querySelector(&#x27;.scene&#x27;).hidden=opening;
       root.querySelector(&#x27;.legend&#x27;).hidden=opening;
       root.querySelector(&#x27;.narration&#x27;).hidden=opening;
       root.querySelector(&#x27;.picture&#x27;).hidden=opening;
@@ -1627,12 +1634,15 @@ html&gt;body{padding:0}&lt;/style&gt;
       q(&#x27;next&#x27;).textContent=opening?&#x27;Show me an example&#x27;:nextLabels[step];
       if(opening){svg.replaceChildren();return}
       const w=Math.max(260,Math.round(root.querySelector(&#x27;.picture&#x27;).getBoundingClientRect().width));
-      const h=210;
+      const wide=window.matchMedia(&#x27;(min-width:700px)&#x27;).matches;
+      const h=wide?Math.min(440,Math.round(w*.9)):w&lt;340?210:260;
+      const nodeRadius=wide?27:24;
       svg.setAttribute(&#x27;viewBox&#x27;,`0 0 ${w} ${h}`);svg.style.height=h+&#x27;px&#x27;;svg.replaceChildren();
       const proof=step&gt;=5&amp;&amp;step&lt;=7;
       let pts;
-      if(proof)pts=[[w/2,22],[w*.16,92],[w/2,140],[w*.84,92],[w*.2,188],[w*.8,188]];
-      else {const r=Math.min(w*.36,h*.37);pts=Array.from({length:n},(_,i)=&gt;[w/2+r*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+r*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
+      if(proof){const top=nodeRadius+4,bottom=h-nodeRadius-4,span=bottom-top;pts=[[w/2,top],[nodeRadius+8,top+span*.38],[w/2,top+span*.70],[w-nodeRadius-8,top+span*.38],[w*.23,bottom],[w*.77,bottom]]}
+      else if(n===3)pts=[[w/2,nodeRadius+8],[w-nodeRadius-10,h-nodeRadius-8],[nodeRadius+10,h-nodeRadius-8]];
+      else {const rx=w/2-nodeRadius-10,ry=h/2-nodeRadius-8;pts=Array.from({length:n},(_,i)=&gt;[w/2+rx*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+ry*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
       let visible=pairs().map((_,i)=&gt;i),active=null;
       const ts=triangles();
       if(step&lt;=1)active=ts[0];
@@ -1644,7 +1654,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       visible.forEach(i=&gt;{const [a,b]=pairs()[i],[x1,y1]=pts[a],[x2,y2]=pts[b];const hot=active&amp;&amp;active.ids.includes(i);const dim=active&amp;&amp;!hot||proof&amp;&amp;(a&gt;3||b&gt;3);
         el(&#x27;line&#x27;,{x1,y1,x2,y2,stroke:`var(--viz-series-${colors[i]?1:2})`,&#x27;stroke-width&#x27;:hot?4:2,&#x27;stroke-dasharray&#x27;:colors[i]?&#x27;none&#x27;:&#x27;7 5&#x27;,opacity:dim?&#x27;.22&#x27;:&#x27;.95&#x27;});
       });
-      pts.forEach(([x,y],i)=&gt;{el(&#x27;circle&#x27;,{cx:x,cy:y,r:20,fill:&#x27;var(--background)&#x27;,stroke:&#x27;var(--border)&#x27;,&#x27;stroke-width&#x27;:1});const t=el(&#x27;text&#x27;,{x,y:y+4,&#x27;text-anchor&#x27;:&#x27;middle&#x27;,class:&#x27;text-small&#x27;});t.textContent=proof&amp;&amp;i===0?&#x27;You&#x27;:names[i]});
+      pts.forEach(([x,y],i)=&gt;{el(&#x27;circle&#x27;,{cx:x,cy:y,r:nodeRadius,fill:&#x27;var(--background)&#x27;,stroke:&#x27;var(--border)&#x27;,&#x27;stroke-width&#x27;:1});const t=el(&#x27;text&#x27;,{x,y:y+4,&#x27;text-anchor&#x27;:&#x27;middle&#x27;});t.textContent=proof&amp;&amp;i===0?&#x27;You&#x27;:names[i]});
       q(&#x27;step&#x27;).textContent=`Step ${step+1} of ${lessons.length}`;q(&#x27;heading&#x27;).textContent=lessons[step][0];q(&#x27;caption&#x27;).textContent=lessons[step][1];
       q(&#x27;back&#x27;).disabled=false;q(&#x27;next&#x27;).textContent=nextLabels[step];
       let fact=&#x27;&#x27;;

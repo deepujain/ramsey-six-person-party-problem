@@ -50,6 +50,13 @@ const { pathToFileURL } = require('node:url');
           assert(doubleArea > 100);
         }
         if (step === 0) {
+          const bounds = await frame.locator('#rp-graph').evaluate(el => {
+            const r=el.getBoundingClientRect();
+            const p=el.querySelector('polygon').getBBox();
+            return {width:r.width,height:r.height,triangleWidth:p.width,triangleHeight:p.height};
+          });
+          assert(bounds.triangleWidth >= bounds.width * .65, `Diagram does not use available width: ${JSON.stringify(bounds)}`);
+          if(width>=700) assert(bounds.height>=300, `Desktop diagram too small: ${JSON.stringify(bounds)}`);
           assert(await frame.locator('#rp-back').isEnabled());
           assert.equal(await frame.locator('#rp-graph line[stroke-dasharray="none"]').count(), 3);
         }
