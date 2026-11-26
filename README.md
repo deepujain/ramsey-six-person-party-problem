@@ -23,7 +23,7 @@ In the visualization, each dot is a person. Solid lines mean "know each other"; 
 
 ## Explore
 
-Open `index.html` in a modern browser. No server or installation is required. Start with the five-person counterexample, switch to six people, flip relationships, and highlight the resulting triangles. Solid edges mean acquaintances; dashed edges mean strangers. Edge crossings are not additional people.
+Open `index.html` in a modern browser. No server or installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
 
 The editable source is `six-person-lab.html`; `index.html` is its standalone export, including presentation support. The fragment can also render inline in Codex.
 
@@ -47,3 +47,13 @@ The verifier enumerates every labeled two-coloring for 3 through 6 vertices, che
 Read [PROOF.md](PROOF.md) for the mathematical proof and [RESEARCH.md](RESEARCH.md) for the parallel investigation and rejected hypothesis.
 
 The proof is written for human review; it is not machine-checked in a proof assistant. Exhaustive enumeration checks this finite instance independently. A browser is an exploration tool, not the basis of the proof.
+
+## Optional browser checks
+
+With Playwright and its Chromium browser installed in your development environment, run:
+
+```sh
+node test_ui.cjs
+```
+
+Set `CHROME_CHANNEL=chrome` to use an installed Google Chrome instead. The checks walk through all nine steps at phone and desktop widths, verify the example diagrams and navigation, and check for horizontal overflow and JavaScript errors. The visualization itself needs no dependencies.
