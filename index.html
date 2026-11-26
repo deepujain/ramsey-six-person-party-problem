@@ -1539,19 +1539,19 @@ html&gt;body{padding:0}&lt;/style&gt;
 &lt;/script&gt;
 &lt;div id=&quot;ramsey-party&quot;&gt;
   &lt;style&gt;
-    #ramsey-party {max-width:760px;margin:0 auto;color:var(--foreground)}
-    #ramsey-party .intro {max-width:64ch;margin:12px 0 20px}
-    #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:16px 0}
+    #ramsey-party {display:flow-root;max-width:640px;margin:0 auto;color:var(--foreground)}
+    #ramsey-party [hidden] {display:none !important}
+    #ramsey-party .intro {max-width:64ch;margin:8px 0 12px}
+    #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:10px 0}
     #ramsey-party .key {display:inline-block;width:26px;vertical-align:middle;margin-right:7px;border-top:3px solid var(--viz-series-1)}
     #ramsey-party .key.strangers {border-color:var(--viz-series-2);border-top-style:dashed}
-    #ramsey-party .narration {min-height:110px}
+    #ramsey-party .narration {min-height:88px}
     #ramsey-party .narration h3 {margin:8px 0}
     #ramsey-party .narration p {margin:8px 0;max-width:65ch}
-    #ramsey-party .picture {max-width:540px;margin:0 auto}
+    #ramsey-party .picture {max-width:420px;margin:0 auto}
     #ramsey-party .graph {display:block;width:100%}
     #ramsey-party .graph text {fill:var(--foreground);font-weight:500}
-    #ramsey-party .fact {min-height:42px;max-width:65ch;margin:8px 0 16px}
-    #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 20px}
+    #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
     #ramsey-party .step {color:var(--muted-foreground)}
   &lt;/style&gt;
   &lt;h2&gt;The party problem&lt;/h2&gt;
@@ -1564,7 +1564,6 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;/ul&gt;
     &lt;p&gt;&lt;strong&gt;How many people must attend to guarantee that one of these groups exists?&lt;/strong&gt;&lt;/p&gt;
     &lt;p&gt;“Guarantee” means it must work however the guests happen to know each other.&lt;/p&gt;
-    &lt;p&gt;The circles below are people. Each line tells you whether two people know each other.&lt;/p&gt;
   &lt;/div&gt;
   &lt;div class=&quot;legend&quot;&gt;
     &lt;span&gt;&lt;span class=&quot;key&quot;&gt;&lt;/span&gt;These two know each other&lt;/span&gt;
@@ -1578,9 +1577,9 @@ html&gt;body{padding:0}&lt;/style&gt;
   &lt;div class=&quot;picture&quot;&gt;
     &lt;svg id=&quot;rp-graph&quot; class=&quot;graph&quot; role=&quot;img&quot; aria-label=&quot;People at a party and whether each pair knows each other.&quot;&gt;&lt;/svg&gt;
   &lt;/div&gt;
-  &lt;p id=&quot;rp-fact&quot; class=&quot;fact&quot; aria-live=&quot;polite&quot;&gt;&lt;/p&gt;
+  &lt;p id=&quot;rp-fact&quot; class=&quot;sr-only&quot; aria-live=&quot;polite&quot;&gt;&lt;/p&gt;
   &lt;div class=&quot;navigation&quot;&gt;
-    &lt;button type=&quot;button&quot; class=&quot;btn&quot; id=&quot;rp-back&quot;&gt;Previous example&lt;/button&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn&quot; id=&quot;rp-back&quot;&gt;Back&lt;/button&gt;
     &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; id=&quot;rp-next&quot;&gt;See three strangers&lt;/button&gt;
   &lt;/div&gt;
   &lt;script&gt;
@@ -1600,29 +1599,39 @@ html&gt;body{padding:0}&lt;/style&gt;
       [&#x27;If none of those three know each other…&#x27;, &#x27;Then Ben, Cara, and Dan are all strangers to each other. We found our other kind of group. If we started with three strangers to you, the same argument works with the relationship types swapped.&#x27;],
       [&#x27;The answer is six&#x27;, &#x27;Five people can avoid both kinds of group. Six people cannot: whatever their relationships, some three all know each other or some three are all strangers to each other. This is the Ramsey result R(3,3) = 6.&#x27;]
     ];
-    const nextLabels=[&#x27;See three strangers&#x27;,&#x27;See a group that does not count&#x27;,&#x27;See why five is not enough&#x27;,&#x27;Add a sixth person&#x27;,&#x27;See why six always works&#x27;,&#x27;What if two know each other?&#x27;,&#x27;What if none know each other?&#x27;,&#x27;See the answer&#x27;,&#x27;Read from the beginning&#x27;];
-    let step=0,n=3,colors=[];
+    const nextLabels=[&#x27;See three strangers&#x27;,&#x27;See a mixed group&#x27;,&#x27;Why five is not enough&#x27;,&#x27;Add a sixth person&#x27;,&#x27;See why six always works&#x27;,&#x27;If two know each other?&#x27;,&#x27;If none know each other?&#x27;,&#x27;See the answer&#x27;,&#x27;Read from the beginning&#x27;];
+    let step=-1,n=3,colors=[];
     const pairs=()=&gt;{const e=[];for(let a=0;a&lt;n;a++)for(let b=a+1;b&lt;n;b++)e.push([a,b]);return e};
     const idx=(a,b)=&gt;pairs().findIndex(e=&gt;e[0]===Math.min(a,b)&amp;&amp;e[1]===Math.max(a,b));
     const letterList=vs=&gt;vs.map(v=&gt;names[v]).join(&#x27;, &#x27;);
     function triangles(){const t=[];for(let a=0;a&lt;n;a++)for(let b=a+1;b&lt;n;b++)for(let c=b+1;c&lt;n;c++){const ids=[idx(a,b),idx(a,c),idx(b,c)];if(ids.every(i=&gt;colors[i]===colors[ids[0]]))t.push({v:[a,b,c],ids,color:colors[ids[0]]})}return t}
     function baseline(count){n=count;colors=pairs().map(([a,b])=&gt;a&lt;5&amp;&amp;b&lt;5&amp;&amp;(b-a===1||b-a===4)?1:0);}
     function setup(){
+      if(step&lt;0){draw();return}
       if(step&lt;=2){n=3;colors=step===0?[1,1,1]:step===1?[0,0,0]:[1,0,1]}
       else if(step===3)baseline(5);
       else if(step===4||step===8)baseline(6);
       else {n=6;colors=pairs().map(()=&gt;0);[1,2,3].forEach(b=&gt;colors[idx(0,b)]=1);if(step===6)colors[idx(1,2)]=1}
       draw();
     }
-    function save(){const host=window.openai;if(host&amp;&amp;host.setWidgetState)host.setWidgetState({modelContent:{lesson:lessons[step][0]},privateContent:{version:3,step}}).catch(()=&gt;{})}
+    function save(){const host=window.openai;if(host&amp;&amp;host.setWidgetState)host.setWidgetState({modelContent:{lesson:step&lt;0?&#x27;The party problem&#x27;:lessons[step][0]},privateContent:{version:4,step}}).catch(()=&gt;{})}
     function el(tag,attrs,parent=svg){const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=&gt;e.setAttribute(k,v));parent.append(e);return e}
     function draw(){
+      const opening=step&lt;0;
+      root.querySelector(&#x27;h2&#x27;).hidden=!opening;
+      root.querySelector(&#x27;.intro&#x27;).hidden=!opening;
+      root.querySelector(&#x27;.legend&#x27;).hidden=opening;
+      root.querySelector(&#x27;.narration&#x27;).hidden=opening;
+      root.querySelector(&#x27;.picture&#x27;).hidden=opening;
+      q(&#x27;back&#x27;).disabled=opening;
+      q(&#x27;next&#x27;).textContent=opening?&#x27;Show me an example&#x27;:nextLabels[step];
+      if(opening){svg.replaceChildren();return}
       const w=Math.max(260,Math.round(root.querySelector(&#x27;.picture&#x27;).getBoundingClientRect().width));
-      const h=step&gt;=5&amp;&amp;step&lt;=7?320:Math.min(330,w*.72+70);
+      const h=210;
       svg.setAttribute(&#x27;viewBox&#x27;,`0 0 ${w} ${h}`);svg.style.height=h+&#x27;px&#x27;;svg.replaceChildren();
       const proof=step&gt;=5&amp;&amp;step&lt;=7;
       let pts;
-      if(proof)pts=[[w/2,40],[w*.16,153],[w/2,214],[w*.84,153],[w*.2,285],[w*.8,285]];
+      if(proof)pts=[[w/2,22],[w*.16,92],[w/2,140],[w*.84,92],[w*.2,188],[w*.8,188]];
       else {const r=Math.min(w*.36,h*.37);pts=Array.from({length:n},(_,i)=&gt;[w/2+r*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+r*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
       let visible=pairs().map((_,i)=&gt;i),active=null;
       const ts=triangles();
@@ -1635,9 +1644,9 @@ html&gt;body{padding:0}&lt;/style&gt;
       visible.forEach(i=&gt;{const [a,b]=pairs()[i],[x1,y1]=pts[a],[x2,y2]=pts[b];const hot=active&amp;&amp;active.ids.includes(i);const dim=active&amp;&amp;!hot||proof&amp;&amp;(a&gt;3||b&gt;3);
         el(&#x27;line&#x27;,{x1,y1,x2,y2,stroke:`var(--viz-series-${colors[i]?1:2})`,&#x27;stroke-width&#x27;:hot?4:2,&#x27;stroke-dasharray&#x27;:colors[i]?&#x27;none&#x27;:&#x27;7 5&#x27;,opacity:dim?&#x27;.22&#x27;:&#x27;.95&#x27;});
       });
-      pts.forEach(([x,y],i)=&gt;{el(&#x27;circle&#x27;,{cx:x,cy:y,r:25,fill:&#x27;var(--background)&#x27;,stroke:&#x27;var(--border)&#x27;,&#x27;stroke-width&#x27;:1});const t=el(&#x27;text&#x27;,{x,y:y+4,&#x27;text-anchor&#x27;:&#x27;middle&#x27;,class:&#x27;text-small&#x27;});t.textContent=proof&amp;&amp;i===0?&#x27;You&#x27;:names[i]});
+      pts.forEach(([x,y],i)=&gt;{el(&#x27;circle&#x27;,{cx:x,cy:y,r:20,fill:&#x27;var(--background)&#x27;,stroke:&#x27;var(--border)&#x27;,&#x27;stroke-width&#x27;:1});const t=el(&#x27;text&#x27;,{x,y:y+4,&#x27;text-anchor&#x27;:&#x27;middle&#x27;,class:&#x27;text-small&#x27;});t.textContent=proof&amp;&amp;i===0?&#x27;You&#x27;:names[i]});
       q(&#x27;step&#x27;).textContent=`Step ${step+1} of ${lessons.length}`;q(&#x27;heading&#x27;).textContent=lessons[step][0];q(&#x27;caption&#x27;).textContent=lessons[step][1];
-      q(&#x27;back&#x27;).disabled=step===0;q(&#x27;next&#x27;).textContent=nextLabels[step];
+      q(&#x27;back&#x27;).disabled=false;q(&#x27;next&#x27;).textContent=nextLabels[step];
       let fact=&#x27;&#x27;;
       if(step===0)fact=&#x27;Amy knows Ben. Ben knows Cara. Amy knows Cara. All three pairs know each other.&#x27;;
       else if(step===1)fact=&#x27;Amy and Ben are strangers. Ben and Cara are strangers. Amy and Cara are strangers.&#x27;;
@@ -1650,8 +1659,8 @@ html&gt;body{padding:0}&lt;/style&gt;
       else fact=&#x27;This arrangement has neither kind of group. That is possible with five people.&#x27;;
       q(&#x27;fact&#x27;).textContent=fact;
     }
-    q(&#x27;next&#x27;).onclick=()=&gt;{step=(step+1)%lessons.length;setup();save()};q(&#x27;back&#x27;).onclick=()=&gt;{if(step&gt;0){step--;setup();save()}};
-    function restore(state){const s=state&amp;&amp;state.privateContent;if(!s||s.version!==3||!Number.isInteger(s.step)||s.step&lt;0||s.step&gt;=lessons.length)return false;step=s.step;setup();return true}
+    q(&#x27;next&#x27;).onclick=()=&gt;{step=step===lessons.length-1?-1:step+1;setup();save()};q(&#x27;back&#x27;).onclick=()=&gt;{if(step&gt;=0){step--;setup();save()}};
+    function restore(state){const s=state&amp;&amp;state.privateContent;if(!s||s.version!==4||!Number.isInteger(s.step)||s.step&lt; -1||s.step&gt;=lessons.length)return false;step=s.step;setup();return true}
     if(!restore(window.openai&amp;&amp;window.openai.widgetState))setup();
     window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{if(e.detail&amp;&amp;e.detail.globals)restore(e.detail.globals.widgetState)});
     new ResizeObserver(()=&gt;draw()).observe(root.querySelector(&#x27;.picture&#x27;));
