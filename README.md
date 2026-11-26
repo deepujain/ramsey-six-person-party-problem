@@ -6,6 +6,21 @@ A small, reproducible example of agent-assisted mathematical research, with an i
 
 **Answer: 6**, the classical Ramsey number R(3,3). This repository demonstrates an established theorem; it does not claim a new result or a solution to an open problem.
 
+## The problem in simple words
+
+Imagine you invite people to a party. For every pair, they either **know each other** or **have never met**.
+
+We're looking for a group of three where either:
+
+- **All three know each other**, or
+- **None of the three know each other**.
+
+The question is: **How many people must attend to guarantee that one of these groups exists?**
+
+The answer is **six**. With five people, it's possible to avoid both kinds of group. With six, one must exist—whatever their relationships.
+
+In the visualization, each dot is a person. Solid lines mean "know each other"; dashed lines mean "strangers." You're looking for a triangle made of **three solid lines or three dashed lines**.
+
 ## Explore
 
 Open `index.html` in a modern browser. No server or installation is required. Start with the five-person counterexample, switch to six people, flip relationships, and highlight the resulting triangles. Solid edges mean acquaintances; dashed edges mean strangers. Edge crossings are not additional people.
