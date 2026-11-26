@@ -21,6 +21,12 @@ The answer is **six**. With five people, it's possible to avoid both kinds of gr
 
 In the visualization, each dot is a person. Solid lines mean "know each other"; dashed lines mean "strangers." You're looking for a triangle made of **three solid lines or three dashed lines**.
 
+## Visual walkthrough
+
+![The walkthrough highlights Ben, Cara, and Dan connected by three dashed lines, meaning all three are strangers to each other.](docs/images/party-problem-walkthrough.png)
+
+Here, Ben, Cara, and Dan are all strangers to each other. Their three dashed connections form one of the groups we are looking for.
+
 ## Explore
 
 Open `index.html` in a modern browser. No server or installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
