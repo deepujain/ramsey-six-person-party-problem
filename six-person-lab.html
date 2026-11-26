@@ -1,0 +1,140 @@
+<div id="ramsey-party">
+  <style>
+    #ramsey-party {display:flow-root;max-width:1080px;margin:0 auto;color:var(--foreground)}
+    #ramsey-party [hidden] {display:none !important}
+    #ramsey-party .intro {max-width:64ch;margin:8px 0 12px}
+    #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:10px 0}
+    #ramsey-party .key {display:inline-block;width:26px;vertical-align:middle;margin-right:7px;border-top:3px solid var(--viz-series-1)}
+    #ramsey-party .key.strangers {border-color:var(--viz-series-2);border-top-style:dashed}
+    #ramsey-party .narration {min-height:88px}
+    #ramsey-party .narration h3 {margin:8px 0}
+    #ramsey-party .narration p {margin:8px 0;max-width:65ch}
+    #ramsey-party .picture {width:100%;max-width:600px;margin:0 auto}
+    #ramsey-party .graph {display:block;width:100%}
+    #ramsey-party .graph text {fill:var(--foreground);font-weight:500}
+    #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+    #ramsey-party .scene {display:grid;gap:8px;align-items:center}
+    @media (min-width:700px) {
+      #ramsey-party .scene {grid-template-columns:minmax(210px,.85fr) minmax(0,1.65fr);gap:28px}
+    }
+    #ramsey-party .step {color:var(--muted-foreground)}
+  </style>
+  <h2>The party problem</h2>
+  <div class="intro">
+    <p>Imagine you invite people to a party. For every pair, they either <strong>know each other</strong> or <strong>have never met</strong>.</p>
+    <p>We’re looking for a group of three where either:</p>
+    <ul>
+      <li><strong>All three know each other</strong>, or</li>
+      <li><strong>None of the three know each other</strong>.</li>
+    </ul>
+    <p><strong>How many people must attend to guarantee that one of these groups exists?</strong></p>
+    <p>“Guarantee” means it must work however the guests happen to know each other.</p>
+  </div>
+  <div class="legend">
+    <span><span class="key"></span>These two know each other</span>
+    <span><span class="key strangers"></span>These two are strangers</span>
+  </div>
+  <div class="scene">
+  <div class="narration" aria-live="polite">
+    <div class="step text-small" id="rp-step"></div>
+    <h3 id="rp-heading"></h3>
+    <p id="rp-caption"></p>
+  </div>
+  <div class="picture">
+    <svg id="rp-graph" class="graph" role="img" aria-label="People at a party and whether each pair knows each other."></svg>
+  </div>
+  </div>
+  <p id="rp-fact" class="sr-only" aria-live="polite"></p>
+  <div class="navigation">
+    <button type="button" class="btn" id="rp-back">Back</button>
+    <button type="button" class="btn btn-primary" id="rp-next">See three strangers</button>
+  </div>
+  <script>
+  (() => {
+    const root=document.getElementById('ramsey-party');
+    const q=id=>root.querySelector('#rp-'+id);
+    const svg=q('graph'), ns='http://www.w3.org/2000/svg';
+    const names=['Amy','Ben','Cara','Dan','Eli','Fay'];
+    const lessons=[
+      ['Three who all know each other', 'This group counts. Every person knows both of the others. We draw a solid line for each pair who know each other.'],
+      ['Three who are all strangers', 'This group counts too. None of these three has met either of the others. All three connecting lines are dashed.'],
+      ['A mixed group does not count', 'Amy knows Ben, and Ben knows Cara. But Amy and Cara are strangers. We need all three pairs to have the same type of relationship.'],
+      ['Five people can avoid both groups', 'Here is one carefully chosen party of five. Check any three people: some know each other and some are strangers. There is no group of either kind we want.'],
+      ['Add a sixth person', 'In this example, Fay is a stranger to everyone. Amy, Cara, and Fay are all strangers to each other. But one example is not enough: why must a group exist in every possible party of six?'],
+      ['Why six always works: start with you', 'You have five relationships. At least three must be the same type: three people know you, or three are strangers to you. Let’s follow the “know you” case.'],
+      ['If two of those three know each other…', 'Suppose Ben and Cara know each other. They both know you, too. You, Ben, and Cara are three people who all know each other. We found our group.'],
+      ['If none of those three know each other…', 'Then Ben, Cara, and Dan are all strangers to each other. We found our other kind of group. If we started with three strangers to you, the same argument works with the relationship types swapped.'],
+      ['The answer is six', 'Five people can avoid both kinds of group. Six people cannot: whatever their relationships, some three all know each other or some three are all strangers to each other. This is the Ramsey result R(3,3) = 6.']
+    ];
+    const nextLabels=['See three strangers','See a mixed group','Why five is not enough','Add a sixth person','See why six always works','If two know each other?','If none know each other?','See the answer','Read from the beginning'];
+    let step=-1,n=3,colors=[];
+    const pairs=()=>{const e=[];for(let a=0;a<n;a++)for(let b=a+1;b<n;b++)e.push([a,b]);return e};
+    const idx=(a,b)=>pairs().findIndex(e=>e[0]===Math.min(a,b)&&e[1]===Math.max(a,b));
+    const letterList=vs=>vs.map(v=>names[v]).join(', ');
+    function triangles(){const t=[];for(let a=0;a<n;a++)for(let b=a+1;b<n;b++)for(let c=b+1;c<n;c++){const ids=[idx(a,b),idx(a,c),idx(b,c)];if(ids.every(i=>colors[i]===colors[ids[0]]))t.push({v:[a,b,c],ids,color:colors[ids[0]]})}return t}
+    function baseline(count){n=count;colors=pairs().map(([a,b])=>a<5&&b<5&&(b-a===1||b-a===4)?1:0);}
+    function setup(){
+      if(step<0){draw();return}
+      if(step<=2){n=3;colors=step===0?[1,1,1]:step===1?[0,0,0]:[1,0,1]}
+      else if(step===3)baseline(5);
+      else if(step===4||step===8)baseline(6);
+      else {n=6;colors=pairs().map(()=>0);[1,2,3].forEach(b=>colors[idx(0,b)]=1);if(step===6)colors[idx(1,2)]=1}
+      draw();
+    }
+    function save(){const host=window.openai;if(host&&host.setWidgetState)host.setWidgetState({modelContent:{lesson:step<0?'The party problem':lessons[step][0]},privateContent:{version:4,step}}).catch(()=>{})}
+    function el(tag,attrs,parent=svg){const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));parent.append(e);return e}
+    function draw(){
+      const opening=step<0;
+      root.querySelector('h2').hidden=!opening;
+      root.querySelector('.intro').hidden=!opening;
+      root.querySelector('.scene').hidden=opening;
+      root.querySelector('.legend').hidden=opening;
+      root.querySelector('.narration').hidden=opening;
+      root.querySelector('.picture').hidden=opening;
+      q('back').disabled=opening;
+      q('next').textContent=opening?'Show me an example':nextLabels[step];
+      if(opening){svg.replaceChildren();return}
+      const w=Math.max(260,Math.round(root.querySelector('.picture').getBoundingClientRect().width));
+      const wide=window.matchMedia('(min-width:700px)').matches;
+      const h=wide?Math.min(440,Math.round(w*.9)):w<340?210:260;
+      const nodeRadius=wide?27:24;
+      svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.style.height=h+'px';svg.replaceChildren();
+      const proof=step>=5&&step<=7;
+      let pts;
+      if(proof){const top=nodeRadius+4,bottom=h-nodeRadius-4,span=bottom-top;pts=[[w/2,top],[nodeRadius+8,top+span*.38],[w/2,top+span*.70],[w-nodeRadius-8,top+span*.38],[w*.23,bottom],[w*.77,bottom]]}
+      else if(n===3)pts=[[w/2,nodeRadius+8],[w-nodeRadius-10,h-nodeRadius-8],[nodeRadius+10,h-nodeRadius-8]];
+      else {const rx=w/2-nodeRadius-10,ry=h/2-nodeRadius-8;pts=Array.from({length:n},(_,i)=>[w/2+rx*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+ry*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
+      let visible=pairs().map((_,i)=>i),active=null;
+      const ts=triangles();
+      if(step<=1)active=ts[0];
+      if(step===4||step===8)active=ts[0];
+      if(proof){visible=pairs().map(([a,b],i)=>a===0||(step===6&&a===1&&b===2)||(step===7&&[1,2,3].includes(a)&&[1,2,3].includes(b))?i:-1).filter(i=>i>=0);if(step===6)active={v:[0,1,2],ids:[idx(0,1),idx(0,2),idx(1,2)],color:1};if(step===7)active={v:[1,2,3],ids:[idx(1,2),idx(1,3),idx(2,3)],color:0}}
+      const title=el('title',{});title.textContent=lessons[step][0];
+      const desc=el('desc',{});desc.textContent=lessons[step][1];
+      if(active)el('polygon',{points:active.v.map(i=>pts[i].join(',')).join(' '),fill:`var(--viz-series-${active.color?1:2})`,'fill-opacity':'.12'});
+      visible.forEach(i=>{const [a,b]=pairs()[i],[x1,y1]=pts[a],[x2,y2]=pts[b];const hot=active&&active.ids.includes(i);const dim=active&&!hot||proof&&(a>3||b>3);
+        el('line',{x1,y1,x2,y2,stroke:`var(--viz-series-${colors[i]?1:2})`,'stroke-width':hot?4:2,'stroke-dasharray':colors[i]?'none':'7 5',opacity:dim?'.22':'.95'});
+      });
+      pts.forEach(([x,y],i)=>{el('circle',{cx:x,cy:y,r:nodeRadius,fill:'var(--background)',stroke:'var(--border)','stroke-width':1});const t=el('text',{x,y:y+4,'text-anchor':'middle'});t.textContent=proof&&i===0?'You':names[i]});
+      q('step').textContent=`Step ${step+1} of ${lessons.length}`;q('heading').textContent=lessons[step][0];q('caption').textContent=lessons[step][1];
+      q('back').disabled=false;q('next').textContent=nextLabels[step];
+      let fact='';
+      if(step===0)fact='Amy knows Ben. Ben knows Cara. Amy knows Cara. All three pairs know each other.';
+      else if(step===1)fact='Amy and Ben are strangers. Ben and Cara are strangers. Amy and Cara are strangers.';
+      else if(step===2)fact='Two solid lines + one dashed line: this group does not count.';
+      else if(step===3)fact='No triangle has three solid lines or three dashed lines. Five is not enough to guarantee a group.';
+      else if(step===5)fact='The three solid lines lead to Ben, Cara, and Dan. What are their relationships with each other?';
+      else if(step===6)fact='You know Ben. You know Cara. Ben knows Cara. All three pairs know each other.';
+      else if(step===7)fact='Ben, Cara, and Dan: three dashed lines, so all three are strangers to each other.';
+      else if(active)fact=`Highlighted: ${letterList(active.v)}. ${active.color?'All three know each other.':'Each is a stranger to both of the others.'}`;
+      else fact='This arrangement has neither kind of group. That is possible with five people.';
+      q('fact').textContent=fact;
+    }
+    q('next').onclick=()=>{step=step===lessons.length-1?-1:step+1;setup();save()};q('back').onclick=()=>{if(step>=0){step--;setup();save()}};
+    function restore(state){const s=state&&state.privateContent;if(!s||s.version!==4||!Number.isInteger(s.step)||s.step< -1||s.step>=lessons.length)return false;step=s.step;setup();return true}
+    if(!restore(window.openai&&window.openai.widgetState))setup();
+    window.addEventListener('openai:set_globals',e=>{if(e.detail&&e.detail.globals)restore(e.detail.globals.widgetState)});
+    new ResizeObserver(()=>draw()).observe(root.querySelector('.picture'));
+  })();
+  </script>
+</div>

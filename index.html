@@ -1,188 +1,2468 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-visualize-standalone>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fcf5e9">
-<meta name="description" content="A little watercolor garden party with a mathematical secret. Find three friends or three strangers, and discover why six guests change everything.">
-<meta property="og:title" content="Ramsey’s Garden · the party of six">
-<meta property="og:description" content="An illustrated, playable proof. Five can hide a pattern. Six cannot.">
-<meta property="og:image" content="https://deepujain.github.io/ramsey-six-person-party-problem/docs/images/party-problem-walkthrough.png">
-<title>Ramsey’s Garden · the party of six</title>
-<style>
-:root{color-scheme:light;--paper:#fcf5e9;--ink:#344d47;--soft:#6e7b6d;--rose:#b54766;--gold:#ad721c;--friend:#b17a20;--stranger:#427e99;--green:#427262;--line:#dcd7c7;--serif:Georgia,'Times New Roman',serif;--sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overscroll-behavior:none}body{background:var(--paper);font:16px/1.45 var(--sans);color:var(--ink)}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--stranger);outline-offset:5px}button:disabled{cursor:default}button[hidden],[hidden]{display:none!important}
-#garden{height:100svh;height:100dvh;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;background:var(--paper)}
-.masthead{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px clamp(18px,4vw,64px) 10px}
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}.brand-mark{font:32px var(--serif);color:var(--rose);transform:rotate(-12deg)}.brand-name{display:block;font:italic 25px/1.1 var(--serif);letter-spacing:-1px}.brand-caption{display:block;font-size:10px;letter-spacing:2.1px;text-transform:uppercase;margin-top:4px;color:var(--soft)}
-.utilities{display:flex;gap:6px}.quiet{background:none;border:0;padding:9px 11px;border-radius:22px;font-size:13px;color:#53685f}.quiet{white-space:nowrap}.quiet:hover{background:#e9eddf}.sound{min-width:83px}.rule-label{border-bottom:1px dotted #8c9a8b}
-.world{position:relative;min-height:0;isolation:isolate;touch-action:manipulation}#painting{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none}.sky-title{position:absolute;z-index:1;left:50%;top:1%;transform:translateX(-50%);width:min(90%,680px);text-align:center;pointer-events:none}.eyebrow{margin:0 0 5px;font-size:11px;letter-spacing:2.7px;text-transform:uppercase;color:#697b70}.sky-title h1{font:400 clamp(30px,3.6vw,57px)/1.04 var(--serif);letter-spacing:-1.8px;margin:0;color:#3d5f54;text-wrap:balance}.sky-title h1 em{font-weight:400;color:var(--rose)}.goal{font:italic clamp(13px,1.25vw,17px)/1.5 var(--serif);margin:10px 0 0;color:#596f60;text-wrap:balance}
-.invitation{position:absolute;top:18%;left:clamp(16px,4vw,64px);z-index:2;padding:11px 16px 12px;background:#fffaf0eb;box-shadow:0 3px 18px #4c685d0a;transform:rotate(-3deg);border-radius:3px;pointer-events:none}.invitation:before{content:'';position:absolute;top:-6px;left:32%;width:38%;height:12px;background:#e8c7aa80;transform:rotate(2deg)}.invitation strong{font:italic 25px var(--serif);font-weight:400;display:block}.invitation small{display:block;font-size:12px;color:#69796b;margin-top:3px}
-.legend{position:absolute;right:clamp(16px,4vw,64px);top:20%;z-index:2;display:grid;gap:7px;padding:10px 14px;background:#fcf5e9bd;border-radius:3px;font-size:12px;pointer-events:none}.thread{display:inline-block;width:24px;vertical-align:middle;margin-right:7px;border-top:2px solid var(--friend)}.thread.stranger{border-top:2px dashed var(--stranger)}
-.guests{position:absolute;inset:0;z-index:2;pointer-events:none}.guest{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;background:none;border:0;padding:0;transform:translate(-50%,-100%);pointer-events:auto;isolation:isolate;touch-action:manipulation;border-radius:45% 45% 20px 20px}.guest:focus-visible{outline-offset:0}.guest-name{display:flex;align-items:center;gap:6px;justify-content:center;white-space:nowrap;padding:4px 12px 5px;border:1px solid #cdd9c6;background:#fffaf1ed;border-radius:30px;box-shadow:0 2px 8px #31544808;font-size:13px;line-height:1.2;transition:background .2s,border-color .2s,transform .2s}.guest[aria-pressed=true] .guest-name{background:#fbe4a9;border-color:#ce9b43;transform:translateY(-3px)}.guest[aria-pressed=true] .guest-name:before{content:'✓';font-size:12px}.guest:hover .guest-name{border-color:#799d82}.guest:disabled{pointer-events:none}.guest:disabled .guest-name{opacity:1}
-.trio-label{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);z-index:3;text-align:center;font:italic 18px var(--serif);color:#46665a;background:#fffaf0e6;padding:6px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 2px 15px #46665a08;pointer-events:none}
-.story{position:relative;z-index:4;display:grid;grid-template-columns:70px minmax(0,1fr) auto;align-items:center;gap:18px;padding:16px clamp(18px,4vw,64px) max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,#fcf5e9 85%,#fcf5e9f0);border-top:1px solid #e3dfcc;min-height:125px}.owl-button{position:relative;background:none;border:0;padding:0;width:64px;height:70px}.owl-button canvas{width:64px;height:70px;display:block}.owl-button:hover{transform:rotate(-4deg)}.story-copy{max-width:660px;min-width:0}.chapter{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#8b806c;display:flex;align-items:center;gap:10px;margin-bottom:6px}.chapter-dots{display:flex;gap:5px}.chapter-dots i{width:5px;height:5px;border-radius:50%;background:#d4d7c4}.chapter-dots i.done{background:#779782}.chapter-dots i.now{background:var(--rose);box-shadow:0 0 0 3px #b5476614}.story h2{font:400 23px/1.18 var(--serif);letter-spacing:-.35px;margin:0 0 5px;text-wrap:balance}.story p{font-size:14px;line-height:1.5;color:#586c5e;margin:0;text-wrap:pretty}.actions{display:flex;align-items:center;gap:12px}.primary{position:relative;background:#496e5c;color:#fffbed;border:1px solid #496e5c;padding:13px 22px;min-height:47px;border-radius:4px 16px 5px 14px;box-shadow:0 3px 0 #315440;font:italic 18px var(--serif);white-space:nowrap;transition:transform .18s,background .18s}.primary:hover{background:#345c49;transform:translateY(-2px)}.primary:active{transform:translateY(2px);box-shadow:none}.secondary{border:0;background:transparent;color:#647b69;padding:9px 5px;font-size:12px;text-decoration:underline;text-decoration-color:#b8c4ae;text-underline-offset:4px;min-height:40px}
-.dialog{border:1px solid #ded7bf;border-radius:9px;background:#fffaf0;color:var(--ink);width:min(90vw,550px);max-height:85dvh;padding:28px;box-shadow:0 24px 90px #233c4433}.dialog::backdrop{background:#1e433b66;backdrop-filter:blur(5px)}.dialog h2{font:32px var(--serif);margin:4px 0 14px}.dialog p,.dialog li{font-size:16px;line-height:1.6}.dialog .close{float:right;background:none;border:0;padding:5px 9px;font-size:22px}.dialog a{color:#35715f}.dialog small{font-size:12px}.proof-note{border-top:1px solid #dcd8c5;padding-top:16px;color:#607565}
-@media(max-width:760px){.masthead{padding:10px 14px 7px;gap:8px}.brand{white-space:nowrap;gap:8px}.brand-name{font-size:22px}.brand-caption{font-size:9px;letter-spacing:1.5px}.brand-mark{font-size:28px}.quiet{padding:9px 7px}.story{grid-template-columns:48px minmax(0,1fr);gap:8px 12px;padding:12px 18px 14px;min-height:155px}.owl-button,.owl-button canvas{width:48px;height:55px}.story h2{font-size:21px}.story p{font-size:13px}.actions{grid-column:1/-1;justify-content:flex-end;gap:14px}.primary{padding:9px 17px;min-height:42px;font-size:17px}.chapter{font-size:9px;margin-bottom:4px}.invitation{top:20%;left:14px;padding:8px 12px}.invitation strong{font-size:21px}.invitation small{font-size:11px}.legend{right:14px;top:20%;padding:7px 10px;font-size:11px;gap:4px}.sky-title{top:2%}.sky-title h1{letter-spacing:-1px}.goal{display:none}.invitation{display:none}.legend{top:80px;left:50%;right:auto;transform:translateX(-50%);display:flex;gap:14px;white-space:nowrap;background:#fcf5e9c9;padding:6px 9px}.eyebrow{font-size:10px}.guest-name{font-size:12px;padding:4px 9px}.trio-label{display:none}}
-@media(max-width:420px){.brand-caption{display:none}.brand-name{font-size:19px}.brand-mark{font-size:25px}.utilities{gap:0}.quiet{font-size:12px}.sound{min-width:34px;width:34px;font-size:0}.sound:before{content:"♫";font-size:20px}.sky-title h1{font-size:26px}.goal{font-size:12px}.invitation{top:23%}.legend{top:76px}.guest-name{font-size:11px}.story h2{font-size:19px}.story p{font-size:12px}.story{padding:9px 14px 12px;gap:6px 8px;min-height:151px}.chapter{font-size:9px}.primary{font-size:16px;min-height:39px}.secondary{font-size:11px}.trio-label{font-size:13px}}
-@media(max-height:580px) and (min-width:650px){.masthead{padding-top:7px}.brand-caption{display:none}.sky-title{display:none}.goal{display:none}.eyebrow{display:none}.trio-label{display:none}.story{min-height:95px;padding-top:8px;padding-bottom:8px;grid-template-columns:50px minmax(0,1fr) auto;gap:12px}.owl-button,.owl-button canvas{width:48px;height:55px}.story h2{font-size:20px}.story p{font-size:12px}.invitation{top:15%}.legend{top:15%}.primary{padding:9px 18px}.guest-name{font-size:12px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Six Person Lab</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
 </head>
 <body>
-<main id="garden">
-  <header class="masthead">
-    <a class="brand" href="#" id="home" aria-label="Ramsey’s Garden, start again"><span class="brand-mark" aria-hidden="true">❦</span><span><span class="brand-name">Ramsey’s Garden</span><span class="brand-caption">A little party. A mathematical secret.</span></span></a>
-    <nav class="utilities" aria-label="Garden tools"><button class="quiet" id="rules-open"><span class="rule-label">The puzzle</span></button><button class="quiet sound" id="sound" aria-pressed="false" aria-label="Turn sound on">♫ Sound off</button></nav>
-  </header>
-  <section class="world" aria-label="An illustrated garden party. Choose guests using their name buttons.">
-    <canvas id="painting" aria-hidden="true"></canvas>
-    <div class="sky-title"><p class="eyebrow" id="eyebrow">An invitation to notice</p><h1 id="world-title">Five can hide it.<br><em>Can six?</em></h1><p class="goal" id="goal">Find three who all know each other. Or three who are all strangers.</p></div>
-    <aside class="invitation" aria-label="Party invitation"><strong id="guest-count">Five guests</strong><small id="selection-count" aria-live="polite">Choose any 3</small></aside>
-    <aside class="legend" aria-label="Relationship colors"><span><i class="thread" aria-hidden="true"></i>Know each other</span><span><i class="thread stranger" aria-hidden="true"></i>Never met</span></aside>
-    <div class="guests" id="guests" role="group" aria-label="Party guests"></div>
-    <div class="trio-label" id="trio-label" hidden></div>
-  </section>
-  <section class="story" aria-label="Ollie’s garden hints">
-    <button class="owl-button" id="hint" aria-label="Ask the owl for a hint"><canvas id="owl" width="128" height="140" aria-hidden="true"></canvas></button>
-    <div class="story-copy" aria-live="polite"><div class="chapter"><span id="chapter-label">The invitation</span><span class="chapter-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div><h2 id="story-title">How many guests make it certain?</h2><p id="story-text">Pick any three. We want all three pairs to know each other, or all three pairs to be strangers.</p></div>
-    <div class="actions"><button class="secondary" id="back" hidden>Go back</button><button class="primary" id="next">Meet the guests</button></div>
-  </section>
-</main>
-<dialog class="dialog" id="rules"><button class="close" id="rules-close" aria-label="Close the puzzle">×</button><h2>A party with a little secret.</h2><p>Imagine you invite people to a party. For every pair, they either <strong>know each other</strong> or <strong>have never met</strong>.</p><p>We’re looking for a group of three where either:</p><ul><li><strong>All three know each other</strong>, or</li><li><strong>None of the three know each other.</strong></li></ul><p><strong>How many people must attend to guarantee one of those groups, whatever their relationships?</strong></p><p>Tap three guests to see their relationships. Gold ribbons mean they know each other. Dashed blue ribbons mean they have never met.</p><p class="proof-note">The answer is six: the classical Ramsey theorem R(3,3) = 6. <a href="PROOF.md">Read the complete proof</a>.</p><small>A visual world inspired by <a href="https://github.com/deepujain/casadegema">Casa de Gemas</a>. Original illustration and code for this garden.</small></dialog>
-<script>
-(() => {
-'use strict';
-const $=id=>document.getElementById(id), cv=$('painting'), ctx=cv.getContext('2d');
-const world=document.querySelector('.world'), people=$('guests');
-const NAMES=['Amy','Ben','Cara','Dan','Eli','Fay'];
-const SKIN=['#dfa579','#e9bd91','#a76e4b','#d59a79','#bc8967','#e6b28c'];
-const CLOTH=['#c36078','#628e8e','#e1ad49','#7089ae','#9d83ab','#c47e48'];
-const HAIR=['#56372f','#6e4935','#44342c','#b57446','#303d39','#704736'];
-let phase='invitation', count=5, selected=[], colors=[], tries=0, found=false, music=false, audio=null;
-let width=0,height=0,dpr=1,positions=[],bg=null,lastTime=0,burst=[],hover=-1,proofKind=0,randomMode=false;
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const edgeList=n=>{const a=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)a.push([i,j]);return a};
-const index=(a,b,n=count)=>edgeList(n).findIndex(e=>e[0]===Math.min(a,b)&&e[1]===Math.max(a,b));
-const relation=(a,b)=>colors[index(a,b)];
-function mono(v){return v.length===3&&relation(v[0],v[1])===relation(v[0],v[2])&&relation(v[0],v[1])===relation(v[1],v[2])}
-function allTrios(){const r=[];for(let a=0;a<count;a++)for(let b=a+1;b<count;b++)for(let c=b+1;c<count;c++)if(mono([a,b,c]))r.push([a,b,c]);return r}
-function pentagon(n){count=n;colors=edgeList(n).map(([a,b])=>a<5&&b<5&&(b-a===1||b-a===4)?1:0)}
-function proofColors(pair){count=6;colors=edgeList(6).map(([a,b])=>a===0&&b<=3?1:0);if(pair)colors[index(1,2)]=1}
-function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)|0;return(seed>>>0)/4294967296}}
-const R=rng(1298);const range=(a,b)=>a+(b-a)*R();
-function path(g,pts){g.beginPath();g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)g.lineTo(pts[i][0],pts[i][1]);g.closePath()}
-function wash(g,x,y,rx,ry,color,seed=1,alpha=.14,layers=8){const rand=rng(seed);g.save();g.fillStyle=color;for(let k=0;k<layers;k++){g.globalAlpha=alpha;const pts=[];for(let i=0;i<22;i++){const t=i/22*Math.PI*2,m=.88+rand()*.22;pts.push([x+Math.cos(t)*rx*m+(rand()-.5)*rx*.12,y+Math.sin(t)*ry*m+(rand()-.5)*ry*.12])}path(g,pts);g.fill()}g.restore()}
-function line(g,pts,color,w=1){g.beginPath();g.moveTo(...pts[0]);for(let i=1;i<pts.length;i++)g.lineTo(...pts[i]);g.strokeStyle=color;g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.stroke()}
-function ellipse(g,x,y,rx,ry,color){g.fillStyle=color;g.beginPath();g.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),0,0,Math.PI*2);g.fill()}
-function rounded(g,x,y,w,h,r,color){g.fillStyle=color;g.beginPath();g.roundRect(x,y,w,h,r);g.fill()}
-function plant(g,x,y,size,seed=8){const rand=rng(seed);g.save();g.translate(x,y);g.scale(size,size);ellipse(g,0,4,23,6,'#5e6f4913');path(g,[[-18,-28],[18,-28],[12,3],[-12,3]]);g.fillStyle='#b7754e';g.fill();ellipse(g,0,-28,19,6,'#cb9469');ellipse(g,0,-29,15,3,'#6c5d46');for(let i=0;i<10;i++){const px=(rand()-.5)*36,py=-35-rand()*40;line(g,[[0,-28],[px*.7,py+13],[px,py]],'#738c55',1.3);ellipse(g,px-4,py+8,5,2,'#80955b');wash(g,px,py,4.3,5,['#b75777','#d9758b','#e8ac79'][i%3],seed+i,.3,3)}g.restore()}
-function arch(g,x,y,w,h,color){g.fillStyle=color;g.beginPath();g.moveTo(x,y+h);g.lineTo(x,y+w/2);g.arc(x+w/2,y+w/2,w/2,Math.PI,0);g.lineTo(x+w,y+h);g.closePath();g.fill()}
-function windowArt(g,x,y,s){arch(g,x,y,35*s,60*s,'#476c76');arch(g,x+3*s,y+3*s,29*s,53*s,'#a4c2c4');line(g,[[x+17.5*s,y+6*s],[x+17.5*s,y+56*s]],'#fcf0d5',2*s);line(g,[[x+3*s,y+28*s],[x+32*s,y+28*s]],'#fcf0d5',2*s);for(const side of[-1,1]){let xx=side<0?x-15*s:x+35*s;rounded(g,xx,y+13*s,13*s,45*s,1,'#5e8c84');for(let k=0;k<7;k++)line(g,[[xx+2*s,y+(18+k*5)*s],[xx+11*s,y+(18+k*5)*s]],'#426f6940',s)}}
-function cottage(g,x,y,s){g.save();g.translate(x,y);g.scale(s,s);wash(g,126,179,150,140,'#d8bda1',62,.1,5);path(g,[[0,59],[253,59],[253,307],[0,307]]);g.fillStyle='#f5e8d3';g.fill();for(let i=0;i<24;i++)wash(g,range(12,240),range(70,295),range(9,25),range(10,30),i%2?'#e7d0b4':'#fff6df',100+i,.07,4);path(g,[[-17,63],[14,0],[239,0],[274,63]]);g.fillStyle='#b56752';g.fill();for(let i=0;i<15;i++){const xx=2+i*17;line(g,[[xx+10,8],[xx-5,57]],'#8f514044',2);line(g,[[xx+12,8],[xx-3,57]],'#d58b6244',3)}line(g,[[-15,63],[273,63]],'#a95f46',5);rounded(g,186,-37,21,37,1,'#ead4b9');rounded(g,181,-41,31,7,1,'#a45e4d');windowArt(g,35,96,1.05);windowArt(g,183,96,.82);arch(g,102,142,63,163,'#ceaf83');arch(g,108,149,51,156,'#647f79');line(g,[[134,175],[134,302]],'#4c6e66',1.5);ellipse(g,128,241,2,2,'#d9b573');ellipse(g,140,241,2,2,'#d9b573');for(let i=0;i<12;i++){const a=Math.PI+i/11*Math.PI;ellipse(g,133+41*Math.cos(a),176+41*Math.sin(a),3,3,i%2?'#6c9295':'#e3c389')}rounded(g,-6,302,270,12,2,'#d9c3a4');rounded(g,-14,313,285,8,2,'#e8d4b4');plant(g,24,306,.7,91);plant(g,222,306,.63,33);g.restore()}
-function tree(g,x,y,s,seed=11){g.save();g.translate(x,y);g.scale(s,s);const rand=rng(seed);g.strokeStyle='#7f6854';g.lineCap='round';g.lineWidth=17;g.beginPath();g.moveTo(0,255);g.bezierCurveTo(-20,169,10,129,-13,56);g.stroke();const ends=[[-115,-25],[-78,-67],[-38,-85],[28,-90],[84,-68],[130,-10],[62,20],[-90,24]];ends.forEach(([a,b],i)=>{g.lineWidth=5+(i%3);g.beginPath();g.moveTo(-8,135);g.bezierCurveTo(a*.2,55,a*.7,b+40,a,b);g.stroke()});for(let i=0;i<90;i++){const a=rand()*Math.PI*2,r=Math.sqrt(rand());const px=Math.cos(a)*148*r,py=-35+Math.sin(a)*90*r;wash(g,px,py,10+rand()*20,9+rand()*15,['#c6818e','#d8949c','#b66785','#e4abb1'][i%4],seed+i,.12,5)}for(let i=0;i<22;i++)ellipse(g,(rand()-.5)*245,-30+(rand()-.5)*145,3.6,2.3,'#bd617c70');g.restore()}
-function lantern(g,x,y,s){line(g,[[x,y-20*s],[x,y-8*s]],'#8a8061',.9);const grad=g.createRadialGradient(x,y,1,x,y,28*s);grad.addColorStop(0,'#fce6a342');grad.addColorStop(1,'#fce6a300');g.fillStyle=grad;g.fillRect(x-28*s,y-28*s,56*s,56*s);rounded(g,x-7*s,y-9*s,14*s,18*s,4*s,'#dfb463');line(g,[[x-5*s,y-9*s],[x+5*s,y-9*s]],'#866c4d',2*s);line(g,[[x,y-7*s],[x,y+7*s]],'#fff4ca',1.4*s)}
-function makeBackground(){
-  bg=document.createElement('canvas');bg.width=Math.round(width*dpr);bg.height=Math.round(height*dpr);const g=bg.getContext('2d');g.scale(dpr,dpr);
-  const w=width,h=height,small=w<650;const rand=rng(42);
-  g.fillStyle='#fcf5e9';g.fillRect(0,0,w,h);
-  const sky=g.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#edf0df');sky.addColorStop(.55,'#f5eada');sky.addColorStop(1,'#f8eddb');g.fillStyle=sky;g.fillRect(0,0,w,h);
-  wash(g,w*.75,h*.25,w*.35,h*.45,'#acc5bb',6,.07,7);wash(g,w*.18,h*.14,w*.2,h*.22,'#dfbac1',14,.07,6);
-  wash(g,w*.5,h*.94,w*.62,h*.33,'#d9bf9e',91,.085,6);wash(g,w*.42,h*.97,w*.58,h*.21,'#ead0af',92,.08,6);
-  // The house and plants are scenery; the guests stay in the foreground at every screen size.
-  const s=Math.min(w/(small?620:1150),h/620);
-  cottage(g,w*.71-122*s,h*.14, s*.83);
-  tree(g,w*.13,h*.32,s*.75,14);tree(g,w*.94,h*.44,s*.45,25);
-  for(let i=0;i<6;i++){const yy=h*(.70+i*.058);line(g,[[0,yy],[w,yy+h*.01]],'#b9a68917',.8)}
-  for(let i=0;i<11;i++){const xx=w*(i/10);line(g,[[w*.52+(xx-w*.52)*.35,h*.68],[xx,h]],'#b9a68912',.8)}
-  const lightY=small?h*.30:h*.24;g.beginPath();g.moveTo(0,lightY-30);g.quadraticCurveTo(w*.45,lightY+24,w,lightY-27);g.strokeStyle='#7f896b60';g.lineWidth=1;g.stroke();for(let i=0;i<12;i++){const t=(i+.5)/12,x=w*t,y=(1-t)*(1-t)*(lightY-30)+2*(1-t)*t*(lightY+24)+t*t*(lightY-27);lantern(g,x,y+12,small?.65:.85)}
-  const tx=w*.51,ty=h*.60,tw=Math.min(w*.15,120),th=Math.min(h*.055,27);line(g,[[tx-tw*.6,ty+5],[tx-tw*.65,ty+48*s]],'#9d805c',7*s);line(g,[[tx+tw*.6,ty+5],[tx+tw*.65,ty+48*s]],'#9d805c',7*s);ellipse(g,tx,ty+7,tw,th,'#bba17b');ellipse(g,tx,ty,tw,th,'#fff0d0');line(g,[[tx-tw*.65,ty-5],[tx+tw*.65,ty+4]],'#d6b581',1);plant(g,tx,ty,.32,8);for(let i=0;i<3;i++){ellipse(g,tx+tw*(i-1)*.6,ty+2,8*s,3*s,'#f6f4e0');ellipse(g,tx+tw*(i-1)*.6,ty+1,3*s,2*s,'#cb8e63')}
-  plant(g,w*.075,h*.94,Math.max(.45,s*.7),16);plant(g,w*.95,h*.91,Math.max(.42,s*.6),42);
-  // A sleeping cat under the flowers.
-  g.save();g.translate(w*.12,h*.91);g.scale(Math.max(.5,s*.7),Math.max(.5,s*.7));ellipse(g,0,0,23,9,'#c88959');ellipse(g,17,-7,11,10,'#d69b68');path(g,[[9,-12],[10,-24],[18,-16],[24,-21],[27,-9]]);g.fillStyle='#d69b68';g.fill();line(g,[[17,-8],[21,-7]],'#6e5847',1.3);g.restore();
-  for(let i=0;i<Math.min(16000,w*h/55);i++){const x=rand()*w,y=rand()*h;g.fillStyle=i%3?'#765e3b06':'#fffdf318';g.fillRect(x,y,rand()*1.4+.3,rand()*1.2+.3)}
+<iframe id="codex-visualization" sandbox="allow-scripts" referrerpolicy="no-referrer" title="Six Person Lab" data-srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; data-visualize-standalone&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Six Person Lab&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
 }
-function layout(){
-  const box=world.getBoundingClientRect();width=Math.max(1,box.width);height=Math.max(1,box.height);dpr=Math.min(devicePixelRatio||1,2);cv.width=Math.round(width*dpr);cv.height=Math.round(height*dpr);cv.style.width=width+'px';cv.style.height=height+'px';
-  const small=width<650;
-  const coords=count===5?small?[[.20,.51],[.50,.47],[.80,.51],[.70,.84],[.30,.84]]:[[.31,.49],[.51,.46],[.72,.48],[.67,.83],[.35,.84]]:small?[[.19,.50],[.50,.47],[.81,.50],[.19,.84],[.50,.86],[.81,.84]]:[[.28,.48],[.49,.46],[.71,.48],[.76,.82],[.51,.87],[.27,.83]];
-  const size=Math.max(height<300?40:48,Math.min(small?width*.16:width*.075,height*(height<300?.20:.24),105));
-  positions=coords.map(([x,y])=>({x:width*x,y:height*y,size}));
-  if(['majority','pair','strangers','ending'].includes(phase)&&!randomMode){
-    const pp=small?[[.50,.51],[.18,.80],[.50,.88],[.82,.80],[.18,.43],[.82,.43]]:[[.49,.48],[.28,.82],[.50,.88],[.73,.82],[.15,.45],[.84,.45]];
-    positions=pp.map(([x,y])=>({x:width*x,y:height*y,size}));
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+.cursor-interaction {
+  cursor: var(--cursor-interaction, pointer);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: var(--cursor-interaction, pointer);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+.widget {
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  box-shadow: 0 0 0 0.5px var(--border-strong, var(--border));
+  color: var(--foreground);
+  background: var(--background);
+}
+
+#widget &gt; :not(.card, .widget, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: var(--cursor-interaction, pointer);
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled=&quot;true&quot;]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+/* Shared preview chrome; product styles stay inside each variant. */
+.viz-dotted-background {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--foreground) 14%, transparent) 0.8px,
+    transparent 0.8px
+  );
+  background-position: center;
+  background-size: 16px 16px;
+}
+
+.viz-carousel {
+  position: relative;
+  min-width: 0;
+}
+
+.viz-carousel:has(&gt; .viz-carousel-controls) {
+  min-height: calc(60px + var(--viz-carousel-picker-height, 0px));
+  padding-bottom: 60px;
+}
+
+.viz-carousel &gt; [data-variant][hidden] {
+  display: none !important;
+}
+
+.viz-carousel &gt; [data-variant] {
+  isolation: isolate;
+}
+
+.viz-carousel-controls {
+  --viz-carousel-hover: light-dark(
+    color-mix(in srgb, var(--foreground) 5.4%, transparent),
+    color-mix(in srgb, var(--foreground) 7.8%, transparent)
+  );
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  left: 50%;
+  display: flex;
+  width: max-content;
+  /* Leave room for the host&#x27;s design-controls launcher at the trailing edge. */
+  max-width: calc(100% - 96px);
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  /* Match the settings dropdown chrome independently of the content font size. */
+  font-size: 13px;
+  font-weight: var(--font-weight-normal);
+  line-height: 18px;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+/* Keep authored mockup button styles out of the shared carousel chrome. */
+.viz-carousel-controls button,
+.viz-carousel-picker &gt; summary {
+  display: flex !important;
+  height: auto !important;
+  min-height: 30px;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px;
+  padding: 0 6px !important;
+  -webkit-app-region: no-drag;
+  border: 0 !important;
+  border-radius: 14px !important;
+  color: inherit !important;
+  background: transparent !important;
+  font: inherit !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.viz-carousel-controls &gt; button,
+.viz-carousel-picker &gt; summary {
+  position: relative;
+  isolation: isolate;
+}
+
+.viz-carousel-controls &gt; button {
+  --icon-size: 16px;
+  width: 30px !important;
+  padding: 0 !important;
+}
+
+.viz-carousel-picker &gt; summary {
+  padding-inline: 12px !important;
+}
+
+.viz-carousel-controls .viz-carousel-caret {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin: 0;
+  color: inherit;
+  transform: rotate(180deg);
+}
+
+.viz-carousel-controls &gt; button &gt; svg,
+.viz-carousel-controls .viz-carousel-caret,
+.viz-carousel-count {
+  opacity: 0.5;
+}
+
+.viz-carousel-controls &gt; button::before,
+.viz-carousel-picker &gt; summary::before {
+  position: absolute;
+  z-index: -1;
+  inset: 3px;
+  border-radius: 12px;
+  content: &quot;&quot;;
+  pointer-events: none;
+}
+
+.viz-carousel-controls &gt; button:hover::before,
+.viz-carousel-picker &gt; summary:hover::before {
+  background: var(--viz-carousel-hover);
+}
+
+.viz-carousel-controls &gt; button,
+.viz-carousel-controls [data-lucide],
+.viz-carousel-controls .lucide {
+  flex-shrink: 0;
+}
+
+.viz-carousel-picker {
+  min-width: 0;
+}
+
+.viz-carousel-picker &gt; summary {
+  min-width: 0;
+  list-style: none;
+}
+
+.viz-carousel-picker &gt; summary::-webkit-details-marker {
+  display: none;
+}
+
+.viz-carousel-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.viz-carousel-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viz-carousel-options {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  max-height: 240px;
+  flex-direction: column;
+  gap: 2px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  box-shadow: 0 4px 12px light-dark(rgb(0 0 0 / 6%), rgb(0 0 0 / 25%));
+}
+
+.viz-carousel-options &gt; button {
+  border-radius: max(0px, calc(var(--radius-lg) - 5px)) !important;
+  width: 100% !important;
+  min-height: 28px;
+  justify-content: flex-start !important;
+  padding: 4px 8px !important;
+  font-size: var(--font-size-small) !important;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.viz-carousel-options &gt; [aria-current=&quot;true&quot;],
+.viz-carousel-options &gt; button:hover {
+  background: var(--viz-carousel-hover) !important;
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled=&quot;true&quot;] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.viz-carousel-controls :is(button, summary):focus-visible {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+}
+
+@media (pointer: coarse) {
+  .viz-carousel:has(&gt; .viz-carousel-controls) {
+    min-height: calc(76px + var(--viz-carousel-picker-height, 0px));
+    padding-bottom: 76px;
   }
-  [...people.children].forEach((el,i)=>{const p=positions[i];if(!p)return;el.style.left=p.x+'px';el.style.top=(p.y+27)+'px';el.style.width=Math.max(64,p.size*.95)+'px';el.style.height=p.size+47+'px'});
-  makeBackground();draw(performance.now());
+
+  .btn,
+  .nav-link,
+  .viz-carousel-controls button,
+  .viz-carousel-picker &gt; summary,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
 }
-function guest(g,p,i,time){const s=p.size/100,chosen=selected.includes(i);const bob=reduced?0:Math.sin(time*.0018+i*1.7)*1.5;g.save();g.translate(p.x,p.y+bob-(chosen?5:0));g.scale(s,s);
-  ellipse(g,0,3,24,6,'#5d775022');if(chosen){g.strokeStyle='#cc9b43';g.lineWidth=1.8;g.setLineDash([3,4]);g.beginPath();g.ellipse(0,2,30,9,0,0,Math.PI*2);g.stroke();g.setLineDash([])}
-  const pants=i%2===0?'#616976':'#80725c';line(g,[[-9,-25],[-10,-3]],pants,8);line(g,[[9,-25],[10,-3]],pants,8);ellipse(g,-12,-1,7,3,'#694f46');ellipse(g,12,-1,7,3,'#694f46');
-  // Sleeves and hands, deliberately imperfect like painted paper figures.
-  line(g,[[-17,-61],[-25,-39],[-22,-29]],CLOTH[i],9);line(g,[[17,-61],[25,-43],[28,-34]],CLOTH[i],9);ellipse(g,-22,-28,4,5,SKIN[i]);ellipse(g,29,-33,4,5,SKIN[i]);
-  path(g,[[-15,-67],[15,-67],[21,-28],[-21,-28]]);g.fillStyle=CLOTH[i];g.fill();wash(g,-5,-45,12,17,'#fff9db',77+i,.04,4);line(g,[[-13,-59],[10,-59]],'#fff5db66',2);for(let k=0;k<3;k++)ellipse(g,1,-52+k*7,1.2,1.2,'#f8eac8');
-  rounded(g,-5,-76,10,13,3,SKIN[i]);ellipse(g,0,-89,20,23,HAIR[i]);ellipse(g,0,-85,17,19,SKIN[i]);
-  if(i%3===0){g.beginPath();g.moveTo(-18,-88);g.bezierCurveTo(-22,-114,20,-118,19,-86);g.bezierCurveTo(5,-110,-2,-90,-18,-88);g.fillStyle=HAIR[i];g.fill();ellipse(g,-18,-74,6,12,HAIR[i]);ellipse(g,18,-74,5,12,HAIR[i])}
-  else if(i%3===1){g.beginPath();g.moveTo(-19,-89);g.bezierCurveTo(-22,-115,16,-119,20,-88);g.bezierCurveTo(9,-99,-4,-96,-19,-89);g.fillStyle=HAIR[i];g.fill()}
-  else{ellipse(g,-12,-105,11,9,HAIR[i]);ellipse(g,4,-108,12,9,HAIR[i]);ellipse(g,15,-100,9,11,HAIR[i])}
-  ellipse(g,-6,-86,1.5,2,'#443e37');ellipse(g,6,-86,1.5,2,'#443e37');ellipse(g,-11,-80,4,2,'#c77c713c');ellipse(g,11,-80,4,2,'#c77c713c');g.beginPath();g.arc(0,-81,5,.2,Math.PI-.2);g.strokeStyle='#986354';g.lineWidth=1;g.stroke();
-  if(i===0){g.save();g.translate(13,-103);g.rotate(.3);ellipse(g,-3,0,6,3,'#d77d8c');ellipse(g,4,0,6,3,'#d77d8c');ellipse(g,0,0,2,2,'#f7d5c4');g.restore()}
-  g.restore();}
-function threads(g,time){
-  let edges=[];
-  if((phase==='five'||phase==='six'||randomMode)&&selected.length>=2)edges=edgeList(selected.length).map(([a,b])=>[selected[a],selected[b]]);
-  if(phase==='majority')edges=edgeList(6).filter(([a])=>a===0);
-  if(phase==='pair')edges=[[0,1],[0,2],[1,2],[0,3]];
-  if(phase==='strangers'||phase==='ending'&&!randomMode)edges=[[1,2],[1,3],[2,3],[0,1],[0,2],[0,3]];
-  const winner=found&&selected.length===3;
-  if(winner){g.save();path(g,selected.map(i=>[positions[i].x,positions[i].y-positions[i].size*.65]));g.fillStyle=relation(selected[0],selected[1])?'#e9c67528':'#8bbdcc24';g.fill();g.restore()}
-  for(const[a,b]of edges){const p=positions[a],q=positions[b],yes=relation(a,b),focus=phase==='majority'?a===0&&b<=3:phase==='pair'?[a,b].every(i=>[0,1,2].includes(i)):phase==='strangers'||phase==='ending'&&!randomMode?a!==0:true;const color=yes?'#b7832c':'#55899c';g.save();g.globalAlpha=focus?.90:.22;g.strokeStyle=color;g.lineWidth=winner?3.3:2.4;g.lineCap='round';if(!yes)g.setLineDash([7,7]);const ax=p.x,ay=p.y-p.size*.66,bx=q.x,by=q.y-q.size*.66;
-    const mx=(ax+bx)/2,my=(ay+by)/2,span=Math.hypot(bx-ax,by-ay);
-    let controlY=my+10,best=Infinity;
-    for(const factor of [0,.22,-.22,.45,-.45,.7,-.7]){const cy=my+span*factor;let cost=Math.abs(factor)*2;
-      for(let k=1;k<10;k++){const t=k/10,x=(1-t)*(1-t)*ax+2*(1-t)*t*mx+t*t*bx,y=(1-t)*(1-t)*ay+2*(1-t)*t*cy+t*t*by;
-        for(let j=0;j<positions.length;j++){if(j===a||j===b)continue;const o=positions[j],dx=(x-o.x)/(o.size*.48),dy=(y-(o.y-o.size*.43))/(o.size*.84);cost+=Math.max(0,1.3-dx*dx-dy*dy)*25}
-        if(y<height*.28||y>height-16)cost+=20;
-      }if(cost<best){best=cost;controlY=cy}}
-    g.beginPath();g.moveTo(ax,ay);g.quadraticCurveTo(mx,controlY,bx,by);g.stroke();g.setLineDash([]);if(winner&&focus){const t=.5,x=mx,y=.25*ay+.5*controlY+.25*by;ellipse(g,x,y,4,4,yes?'#e3bc62':'#8cb9cb');ellipse(g,x-1,y-1,1.5,1.5,'#fff9e2')}g.restore()}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
-function sparkle(x,y){for(let i=0;i<(reduced?0:22);i++)burst.push({x,y,vx:(R()-.5)*2.5,vy:-R()*2.7-1,life:1,color:['#dcad58','#c97a91','#81a599'][i%3]})}
-function draw(time){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);if(bg)ctx.drawImage(bg,0,0,width,height);threads(ctx,time);positions.map((p,i)=>({p,i})).sort((a,b)=>a.p.y-b.p.y).forEach(({p,i})=>guest(ctx,p,i,time));
-  if(!reduced){for(let i=0;i<6;i++){const x=(width*(.1+i*.16)+Math.sin(time*.0004+i)*12),y=height*(.35+((i*.13)% .55))+Math.cos(time*.0005+i)*8;ellipse(ctx,x,y,1.5,1,'#d7a55470')}
-    for(const b of burst){b.x+=b.vx;b.y+=b.vy;b.vy+=.025;b.life-=.012;ctx.globalAlpha=Math.max(0,b.life);ellipse(ctx,b.x,b.y,2.5,1.7,b.color)}ctx.globalAlpha=1;burst=burst.filter(b=>b.life>0)}
+
+#widget &gt; svg {
+  width: 100%;
 }
-function loop(time){if(time-lastTime>32){draw(time);lastTime=time}if(!reduced)requestAnimationFrame(loop)}
-function owl(){const c=$('owl').getContext('2d');c.scale(2,2);ellipse(c,32,65,23,4,'#637e5b1a');ellipse(c,32,38,23,26,'#8e8065');ellipse(c,32,43,18,19,'#c1ad83');path(c,[[11,23],[13,4],[28,17],[39,17],[53,5],[53,28]]);c.fillStyle='#8e8065';c.fill();ellipse(c,22,29,12,13,'#e8d5a4');ellipse(c,43,29,12,13,'#e8d5a4');ellipse(c,23,29,7,8,'#b9943d');ellipse(c,42,29,7,8,'#b9943d');ellipse(c,24,29,3.5,5,'#3e4940');ellipse(c,41,29,3.5,5,'#3e4940');ellipse(c,25,27,1.5,1.5,'#fff5d8');ellipse(c,42,27,1.5,1.5,'#fff5d8');path(c,[[29,37],[36,37],[32,44]]);c.fillStyle='#c89a4d';c.fill();for(let i=0;i<3;i++)line(c,[[23+i*7,49],[25+i*7,52],[28+i*7,49]],'#8c80624d',1.2);line(c,[[23,61],[23,67]],'#8b7251',3);line(c,[[41,61],[41,67]],'#8b7251',3)}
-function chime(success=false){if(!music)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();[0,success?4:0,success?7:0].slice(0,success?3:1).forEach((note,i)=>{const t=audio.currentTime+i*.09,osc=audio.createOscillator(),gain=audio.createGain();osc.type='sine';osc.frequency.value=440*Math.pow(2,note/12);gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(.045,t+.015);gain.gain.exponentialRampToValueAtTime(.0001,t+.8);osc.connect(gain);gain.connect(audio.destination);osc.start(t);osc.stop(t+.85)})}catch{}}
-function story(title,text){$('story-title').textContent=title;$('story-text').textContent=text}
-function action(label,show=true){$('next').textContent=label;$('next').hidden=!show}
-function renderPeople(){people.replaceChildren();for(let i=0;i<count;i++){const b=document.createElement('button');b.className='guest';b.type='button';b.dataset.person=i;b.setAttribute('aria-label','Choose '+NAMES[i]);b.setAttribute('aria-pressed',selected.includes(i)?'true':'false');const name=document.createElement('span');name.className='guest-name';name.textContent=['majority','pair','strangers','ending'].includes(phase)&&!randomMode&&i===0?'You':NAMES[i];b.append(name);b.addEventListener('click',()=>choose(i));people.append(b)}syncSelection()}
-function syncSelection(){const playable=['five','six'].includes(phase)||randomMode;[...people.children].forEach((b,i)=>{b.setAttribute('aria-pressed',selected.includes(i)?'true':'false');b.disabled=!playable;b.setAttribute('aria-label',(selected.includes(i)?'Unselect ':'Choose ')+NAMES[i])});$('selection-count').textContent=playable?`${selected.length} of 3 chosen`:'A little mathematical certainty';if(width<650&&playable)$('eyebrow').textContent=`${count} guests · ${selected.length} of 3 chosen`;$('guest-count').textContent=count===5?'Five guests':'Six guests'}
-function update(){
-  const titles={invitation:['An invitation to notice','Five can hide it.<br><em>Can six?</em>'],five:['A party of five','Find the <em>three.</em>'],six:['One more guest','A little more company.<br><em>A pattern appears.</em>'],majority:['The secret of six','Five relationships.<br><em>Three of one kind.</em>'],pair:['The first possibility','Two know each other?<br><em>You make three.</em>'],strangers:['The other possibility','None know each other?<br><em>There’s your three.</em>'],ending:['A tiny theorem, discovered','<em>Six.</em> Every time.']};
-  const t=titles[phase];$('eyebrow').textContent=t[0];$('world-title').innerHTML=t[1];$('goal').textContent=phase==='invitation'?'Find three who all know each other. Or three who are all strangers.':phase==='five'||phase==='six'?'Tap three guests. Their ribbons reveal who knows whom.':phase==='majority'?'A 2–3 split is the closest you can get. Three must share one type.':phase==='ending'?'Five can avoid both groups. Six cannot. R(3,3) = 6.':'Gold: know each other. Blue dashes: never met.';
-  const chapters={invitation:0,five:0,six:1,majority:2,pair:3,strangers:3,ending:4};$('chapter-label').textContent=['The invitation','One more guest','A small discovery','Two possibilities','The unavoidable party'][chapters[phase]];document.querySelectorAll('.chapter-dots i').forEach((d,i)=>d.className=i===chapters[phase]?'now':i<chapters[phase]?'done':'');$('back').hidden=phase==='invitation';$('back').textContent=randomMode?'Show the proof':'Go back';$('trio-label').hidden=true;
-  if(phase==='invitation'){story('How many guests make it certain?','Pick any three. We want all three pairs to know each other, or all three pairs to be strangers.');action('Meet the guests')}
-  if(phase==='five'){story('Five guests. A very clever arrangement.','Tap any three guests to reveal their relationships. Can you find a group where all three pairs match?');action('Invite a sixth guest',tries>0)}
-  if(phase==='six'){story('Fay has arrived. She’s new here.','She hasn’t met anyone yet. Choose three guests and look for three matching ribbons.');action('Owl, give me a hint')}
-  if(phase==='majority'){story('Start with yourself. You have five relationships.','At least three are the same kind. Here, Ben, Cara, and Dan all know you. What about each other?');action('Two know each other')}
-  if(phase==='pair'){story('Ben knows Cara. Both of them know you.','You, Ben, and Cara all know each other. Three golden ribbons: we found our group.');action('What if none do?');$('trio-label').hidden=false;$('trio-label').textContent='You · Ben · Cara — all know each other'}
-  if(phase==='strangers'){story('Then Ben, Cara, and Dan are all strangers.','Three dashed blue ribbons: our other kind of group. Either way, a group of three is unavoidable.');action('So, how many guests?');$('trio-label').hidden=false;$('trio-label').textContent='Ben · Cara · Dan — all strangers'}
-  if(phase==='ending'){story('Six guests. Whatever their relationships.','Start with three strangers to you instead? Swap the ribbon types. The same proof works.');action('Host another party');$('trio-label').hidden=false;$('trio-label').textContent='The Ramsey party theorem · R(3,3) = 6'}
-  if(randomMode){$('world-title').innerHTML='A new party.<br><em>The same certainty.</em>';$('goal').textContent='Different relationships. Six guests. A matching trio is always hiding here.';story('Your garden, your next discovery.','Tap three guests. However the relationships change, a matching trio always exists.');action('Another arrangement');$('trio-label').hidden=true}
-  renderPeople();layout();
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
 }
-function choose(i){if(!['five','six'].includes(phase)&&!randomMode)return;chime();if(selected.includes(i))selected=selected.filter(j=>j!==i);else{if(selected.length===3)selected=[];selected.push(i)}found=false;$('trio-label').hidden=true;syncSelection();if(selected.length===3){tries++;found=mono(selected);const names=selected.map(i=>NAMES[i]);if(found){const known=relation(selected[0],selected[1]);story(known?'Three people who all know each other.':'Three people who are all strangers.',`${names.join(', ')}. ${known?'Every pair knows each other.':'None has met either of the others.'} We found a matching trio.`);$('trio-label').textContent=known?'Three gold ribbons. All know each other.':'Three blue ribbons. All strangers.';$('trio-label').hidden=false;selected.forEach(i=>sparkle(positions[i].x,positions[i].y-positions[i].size*.6));chime(true);if(!randomMode)action('But why is it guaranteed?')}else{let yes=null,no=null;for(const[a,b]of edgeList(3)){const pair=[selected[a],selected[b]];if(relation(...pair))yes=pair;else no=pair}story('A little mixed company.',`${NAMES[yes[0]]} knows ${NAMES[yes[1]]}, but ${NAMES[no[0]]} and ${NAMES[no[1]]} are strangers. The three pairs don’t all match.`);if(phase==='five')action('Invite a sixth guest');else if(!randomMode)action('Owl, give me a hint')}}else{story(selected.length?'One more look at the guests.':'Choose a little group of three.',`${3-selected.length} more ${3-selected.length===1?'guest':'guests'} to choose. We’ll show only the relationships in your chosen group.`);if(phase==='five')action('Invite a sixth guest',tries>0);else if(!randomMode)action('Owl, give me a hint')}draw(performance.now())}
-function enter(next){phase=next;selected=[];found=false;randomMode=false;if(next==='five'){pentagon(5);tries=0}if(next==='six')pentagon(6);if(['majority','pair','strangers','ending'].includes(next)){proofColors(next==='pair');selected=next==='pair'?[0,1,2]:next==='strangers'||next==='ending'?[1,2,3]:[];found=next==='pair'||next==='strangers'}update();chime(next==='ending');if(next==='six')sparkle(positions[5].x,positions[5].y-positions[5].size);if(next==='ending')selected.forEach(i=>sparkle(positions[i].x,positions[i].y-positions[i].size))}
-function hint(){if(phase==='invitation')story('The little question behind this party.','How many guests guarantee three who all know each other, or three who are all strangers? Tap “Meet the guests” to explore.');else if(phase==='five')story('Five can keep the secret.','This arrangement has no matching trio. Try any three, then invite one more guest.');else if(phase==='six'||randomMode){const t=allTrios()[0];if(t)story('Ollie has spotted a little group.',`Try ${t.map(i=>NAMES[i]).join(', ')}. Tap those three guests and watch their ribbons.`)}else if(phase==='majority')story('Think about splitting five things into two kinds.','Even a 2–3 split gives you three of one kind. All other splits give you at least three, too.');else if(phase==='pair')story('Look at You, Ben, and Cara.','Each knows both of the others. The three golden ribbons form a group where everyone knows everyone.');else if(phase==='strangers')story('No gold ribbon between Ben, Cara, and Dan?','Then all three connecting ribbons are blue. Those three are all strangers to each other.');else story('The secret was the number six.','With five, a matching trio can be avoided. With six, one must exist. You just explored the proof.');chime()}
-$('next').onclick=()=>{if(randomMode){colors=colors.map(()=>Math.random()<.5?0:1);selected=[];found=false;update();return}if(phase==='invitation')enter('five');else if(phase==='five')enter('six');else if(phase==='six'){if(found)enter('majority');else hint()}else if(phase==='majority')enter('pair');else if(phase==='pair')enter('strangers');else if(phase==='strangers')enter('ending');else{randomMode=true;count=6;colors=edgeList(6).map(()=>Math.random()<.5?0:1);selected=[];found=false;update()}};
-$('back').onclick=()=>{if(randomMode){enter('majority');return}const prev={five:'invitation',six:'five',majority:'six',pair:'majority',strangers:'pair',ending:'strangers'};if(phase==='five')pentagon(5);enter(prev[phase]||'invitation')};
-$('home').onclick=e=>{e.preventDefault();pentagon(5);enter('invitation')};$('hint').onclick=hint;$('sound').onclick=()=>{music=!music;$('sound').textContent=music?'♫ Sound on':'♫ Sound off';$('sound').setAttribute('aria-pressed',String(music));$('sound').setAttribute('aria-label',music?'Turn sound off':'Turn sound on');chime()};
-$('rules-open').onclick=()=>$('rules').showModal();$('rules-close').onclick=()=>$('rules').close();$('rules').addEventListener('click',e=>{if(e.target===$('rules')){const r=$('rules').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('rules').close()}});
-new ResizeObserver(()=>layout()).observe(world);document.addEventListener('visibilitychange',()=>{if(document.hidden&&audio)audio.suspend();else if(audio&&music)audio.resume()});
-pentagon(5);owl();update();if(!reduced)requestAnimationFrame(loop);
-// Small read-only observability surface for deterministic browser verification.
-window.partyGarden={snapshot:()=>({phase,count,selected:[...selected],colors:[...colors],found,matchingTrios:allTrios().map(t=>[...t]),randomMode,positions:positions.map(p=>({...p}))})};
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;script type=&quot;application/json&quot; id=&quot;codex-visualization-widget-state&quot;&gt;__CODEX_VISUALIZATION_WIDGET_STATE__&lt;/script&gt;
+&lt;script&gt;(() =&gt; {
+  const root = document.documentElement;
+  const mediaQuery = globalThis.matchMedia(&quot;(prefers-color-scheme: dark)&quot;);
+  const apply = Reflect.apply;
+  const isArray = Array.isArray;
+  const hasOwn = Object.hasOwn;
+  const parentWindow = globalThis.parent;
+  const stringify = JSON.stringify;
+  const parse = JSON.parse;
+  const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
+  const initialStateElement = document.getElementById(
+    &quot;codex-visualization-widget-state&quot;,
+  );
+  const initialGlobals = parse(initialStateElement?.textContent ?? &quot;{}&quot;);
+  initialStateElement?.remove();
+  /** @type {Record&lt;string, unknown&gt; | null} */
+  let state = initialGlobals.widgetState ?? null;
+  const statePersistence = initialGlobals.statePersistence ?? &quot;none&quot;;
+  let nextStateRequestId = 0;
+  /** @type {Map&lt;number, { resolve: () =&gt; void; reject: (error: Error) =&gt; void; timeout: ReturnType&lt;typeof globalThis.setTimeout&gt;; serializedState: string }&gt;} */
+  const pendingStateWrites = new Map();
+  const persistenceError = () =&gt;
+    Object.assign(
+      new Error(&quot;The host could not persist the widget state update&quot;),
+      {
+        code: -32000,
+        data: { code: &quot;widget_state_persistence_failed&quot;, retryable: false },
+      },
+    );
+  /**
+   * @param {object} prototype
+   * @param {string} property
+   */
+  const getPrototypeGetter = (prototype, property) =&gt; {
+    // oxlint-disable-next-line typescript/unbound-method -- invoked through captured Reflect.apply
+    const getter = Object.getOwnPropertyDescriptor(prototype, property)?.get;
+    if (getter == null) {
+      throw new Error(`Missing ${property} getter`);
+    }
+    return getter;
+  };
+  const getMessageData = getPrototypeGetter(MessageEvent.prototype, &quot;data&quot;);
+  const getMessagePorts = getPrototypeGetter(MessageEvent.prototype, &quot;ports&quot;);
+  const getMessageSource = getPrototypeGetter(MessageEvent.prototype, &quot;source&quot;);
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const addHostMessageListener = MessagePort.prototype.addEventListener;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const postHostMessage = MessagePort.prototype.postMessage;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const startHostPort = MessagePort.prototype.start;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const stopMessagePropagation = Event.prototype.stopImmediatePropagation;
+  /** @type {MessagePort | null} */
+  let hostPort = null;
+  const postToHost = (type, payload) =&gt; {
+    if (hostPort != null) {
+      apply(postHostMessage, hostPort, [{ type, ...payload }]);
+    }
+  };
+  const openExternal = ({ href }) =&gt; {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost(&quot;open-external&quot;, { href });
+    }
+  };
+  const sendFollowUpMessage = ({ context, prompt, title }) =&gt; {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost(&quot;follow-up&quot;, { context, prompt, title });
+    }
+    return Promise.resolve();
+  };
+  /**
+   * @param {Record&lt;string, unknown&gt; | ((previous: Record&lt;string, unknown&gt; | null) =&gt; Record&lt;string, unknown&gt;)} next
+   * @returns {Promise&lt;void&gt;}
+   */
+  const setWidgetState = async (next) =&gt; {
+    const nextState = typeof next === &quot;function&quot; ? next(state) : next;
+    if (
+      nextState == null ||
+      typeof nextState !== &quot;object&quot; ||
+      isArray(nextState)
+    ) {
+      throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+    }
+    const inputState = stringify(
+      nextState,
+      (_key, /** @type {unknown} */ value) =&gt; {
+        if (
+          typeof value === &quot;undefined&quot; ||
+          typeof value === &quot;function&quot; ||
+          typeof value === &quot;symbol&quot; ||
+          (typeof value === &quot;number&quot; &amp;&amp; !Number.isFinite(value))
+        ) {
+          throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+        }
+        return value;
+      },
+    );
+    const parsedState = parse(inputState);
+    if (
+      parsedState == null ||
+      typeof parsedState !== &quot;object&quot; ||
+      isArray(parsedState)
+    ) {
+      throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+    }
+    const storedState = {
+      modelContent: null,
+      privateContent: null,
+      ...parsedState,
+    };
+    const serializedState = stringify(storedState);
+    if (encode(serializedState).length &gt; 16 * 1024) {
+      throw new TypeError(
+        &quot;Widget state must be a JSON object of at most 16 KiB&quot;,
+      );
+    }
+    if (
+      hasOwn(storedState, &quot;imageIds&quot;) &amp;&amp;
+      (!isArray(storedState.imageIds) ||
+        storedState.imageIds.some(
+          (/** @type {unknown} */ id) =&gt; typeof id !== &quot;string&quot;,
+        ))
+    ) {
+      throw new TypeError(&quot;Widget state imageIds must be an array of strings&quot;);
+    }
+    if (storedState.imageIds?.length &gt; 0) {
+      throw Object.assign(
+        new TypeError(&quot;Visualization state does not support image attachments&quot;),
+        { code: -32602, data: { code: &quot;images_unsupported&quot; } },
+      );
+    }
+    state = storedState;
+    globalThis.openai.widgetState = state;
+    globalThis.dispatchEvent(
+      new CustomEvent(&quot;openai:set_globals&quot;, {
+        detail: { globals: { widgetState: state } },
+      }),
+    );
+    if (statePersistence === &quot;none&quot;) {
+      throw persistenceError();
+    }
+    const id = ++nextStateRequestId;
+    return new Promise((resolve, reject) =&gt; {
+      const timeout = globalThis.setTimeout(() =&gt; {
+        pendingStateWrites.delete(id);
+        reject(persistenceError());
+      }, 30_000);
+      pendingStateWrites.set(id, { resolve, reject, timeout, serializedState });
+      postToHost(&quot;widget-state-write&quot;, { id, state: serializedState });
+    });
+  };
+  const syncTheme = () =&gt; {
+    const theme = mediaQuery.matches ? &quot;dark&quot; : &quot;light&quot;;
+    root.dataset.theme = theme;
+    globalThis.openai = {
+      ...globalThis.openai,
+      openExternal,
+      sendFollowUpMessage,
+      setWidgetState,
+      theme,
+      visualizationStyleVariables: {},
+      visualizationTheme: theme,
+      widgetState: state,
+      statePersistence,
+      stateModelContext: &quot;none&quot;,
+    };
+    globalThis.dispatchEvent(
+      new CustomEvent(&quot;openai:set_globals&quot;, {
+        detail: { globals: globalThis.openai },
+      }),
+    );
+  };
+  const sendHeight = () =&gt; {
+    postToHost(&quot;height&quot;, {
+      height: Math.ceil(
+        Math.max(
+          document.body.scrollHeight,
+          document.body.getBoundingClientRect().height,
+        ),
+      ),
+    });
+  };
+
+  globalThis.addEventListener(
+    &quot;message&quot;,
+    (event) =&gt; {
+      const data = apply(getMessageData, event, []);
+      const ports = apply(getMessagePorts, event, []);
+      const source = apply(getMessageSource, event, []);
+      if (
+        hostPort != null ||
+        source !== parentWindow ||
+        typeof data !== &quot;object&quot; ||
+        data?.type !== &quot;codex-visualization-initialize&quot; ||
+        !isArray(ports) ||
+        ports.length !== 1
+      ) {
+        return;
+      }
+      apply(stopMessagePropagation, event, []);
+      const nextHostPort = ports[0];
+      try {
+        apply(addHostMessageListener, nextHostPort, [
+          &quot;message&quot;,
+          (event) =&gt; {
+            const data = apply(getMessageData, event, []);
+            if (typeof data === &quot;object&quot; &amp;&amp; data?.type === &quot;measure&quot;) {
+              sendHeight();
+            } else if (
+              typeof data === &quot;object&quot; &amp;&amp;
+              data?.type === &quot;widget-state-result&quot;
+            ) {
+              /** @type {unknown} */
+              const id = data.id;
+              if (typeof id !== &quot;number&quot;) {
+                return;
+              }
+              const pending = pendingStateWrites.get(id);
+              if (pending != null) {
+                pendingStateWrites.delete(id);
+                globalThis.clearTimeout(pending.timeout);
+                if (data.ok === true) {
+                  pending.resolve();
+                } else {
+                  pending.reject(persistenceError());
+                }
+              }
+            }
+          },
+        ]);
+        apply(startHostPort, nextHostPort, []);
+      } catch {
+        return;
+      }
+      hostPort = nextHostPort;
+      for (const [id, { serializedState }] of pendingStateWrites) {
+        postToHost(&quot;widget-state-write&quot;, { id, state: serializedState });
+      }
+      sendHeight();
+    },
+    { capture: true },
+  );
+  document.currentScript?.remove();
+  mediaQuery.addEventListener(&quot;change&quot;, syncTheme);
+  globalThis.addEventListener(&quot;click&quot;, (event) =&gt; {
+    if (event.defaultPrevented) {
+      return;
+    }
+    let element = null;
+    if (event.target instanceof globalThis.Element) {
+      element = event.target;
+    } else if (event.target instanceof globalThis.Node) {
+      element = event.target.parentElement;
+    }
+    const link = element?.closest(&quot;a[href]&quot;);
+    const href = link?.getAttribute(&quot;href&quot;);
+    if (href == null) {
+      return;
+    }
+    if (href.startsWith(&quot;#&quot;)) {
+      let id;
+      try {
+        id = decodeURIComponent(href.slice(1));
+      } catch {
+        return;
+      }
+      const target = id.length === 0 ? root : document.getElementById(id);
+      if (
+        target == null ||
+        globalThis.navigator.userActivation?.isActive !== true
+      ) {
+        return;
+      }
+      event.preventDefault();
+      postToHost(&quot;scroll-to&quot;, {
+        top: target.getBoundingClientRect().top + globalThis.scrollY,
+      });
+      return;
+    }
+    event.preventDefault();
+    openExternal({ href });
+  });
+  new ResizeObserver(sendHeight).observe(document.body);
+  syncTheme();
+})();
+&lt;/script&gt;
+&lt;div id=&quot;ramsey-party&quot;&gt;
+  &lt;style&gt;
+    #ramsey-party {display:flow-root;max-width:1080px;margin:0 auto;color:var(--foreground)}
+    #ramsey-party [hidden] {display:none !important}
+    #ramsey-party .intro {max-width:64ch;margin:8px 0 12px}
+    #ramsey-party .legend {display:flex;gap:12px 24px;flex-wrap:wrap;margin:10px 0}
+    #ramsey-party .key {display:inline-block;width:26px;vertical-align:middle;margin-right:7px;border-top:3px solid var(--viz-series-1)}
+    #ramsey-party .key.strangers {border-color:var(--viz-series-2);border-top-style:dashed}
+    #ramsey-party .narration {min-height:88px}
+    #ramsey-party .narration h3 {margin:8px 0}
+    #ramsey-party .narration p {margin:8px 0;max-width:65ch}
+    #ramsey-party .picture {width:100%;max-width:600px;margin:0 auto}
+    #ramsey-party .graph {display:block;width:100%}
+    #ramsey-party .graph text {fill:var(--foreground);font-weight:500}
+    #ramsey-party .navigation {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+    #ramsey-party .scene {display:grid;gap:8px;align-items:center}
+    @media (min-width:700px) {
+      #ramsey-party .scene {grid-template-columns:minmax(210px,.85fr) minmax(0,1.65fr);gap:28px}
+    }
+    #ramsey-party .step {color:var(--muted-foreground)}
+  &lt;/style&gt;
+  &lt;h2&gt;The party problem&lt;/h2&gt;
+  &lt;div class=&quot;intro&quot;&gt;
+    &lt;p&gt;Imagine you invite people to a party. For every pair, they either &lt;strong&gt;know each other&lt;/strong&gt; or &lt;strong&gt;have never met&lt;/strong&gt;.&lt;/p&gt;
+    &lt;p&gt;We’re looking for a group of three where either:&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;All three know each other&lt;/strong&gt;, or&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;None of the three know each other&lt;/strong&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;&lt;strong&gt;How many people must attend to guarantee that one of these groups exists?&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;“Guarantee” means it must work however the guests happen to know each other.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;legend&quot;&gt;
+    &lt;span&gt;&lt;span class=&quot;key&quot;&gt;&lt;/span&gt;These two know each other&lt;/span&gt;
+    &lt;span&gt;&lt;span class=&quot;key strangers&quot;&gt;&lt;/span&gt;These two are strangers&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;scene&quot;&gt;
+  &lt;div class=&quot;narration&quot; aria-live=&quot;polite&quot;&gt;
+    &lt;div class=&quot;step text-small&quot; id=&quot;rp-step&quot;&gt;&lt;/div&gt;
+    &lt;h3 id=&quot;rp-heading&quot;&gt;&lt;/h3&gt;
+    &lt;p id=&quot;rp-caption&quot;&gt;&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;picture&quot;&gt;
+    &lt;svg id=&quot;rp-graph&quot; class=&quot;graph&quot; role=&quot;img&quot; aria-label=&quot;People at a party and whether each pair knows each other.&quot;&gt;&lt;/svg&gt;
+  &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;p id=&quot;rp-fact&quot; class=&quot;sr-only&quot; aria-live=&quot;polite&quot;&gt;&lt;/p&gt;
+  &lt;div class=&quot;navigation&quot;&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn&quot; id=&quot;rp-back&quot;&gt;Back&lt;/button&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; id=&quot;rp-next&quot;&gt;See three strangers&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+  (() =&gt; {
+    const root=document.getElementById(&#x27;ramsey-party&#x27;);
+    const q=id=&gt;root.querySelector(&#x27;#rp-&#x27;+id);
+    const svg=q(&#x27;graph&#x27;), ns=&#x27;http://www.w3.org/2000/svg&#x27;;
+    const names=[&#x27;Amy&#x27;,&#x27;Ben&#x27;,&#x27;Cara&#x27;,&#x27;Dan&#x27;,&#x27;Eli&#x27;,&#x27;Fay&#x27;];
+    const lessons=[
+      [&#x27;Three who all know each other&#x27;, &#x27;This group counts. Every person knows both of the others. We draw a solid line for each pair who know each other.&#x27;],
+      [&#x27;Three who are all strangers&#x27;, &#x27;This group counts too. None of these three has met either of the others. All three connecting lines are dashed.&#x27;],
+      [&#x27;A mixed group does not count&#x27;, &#x27;Amy knows Ben, and Ben knows Cara. But Amy and Cara are strangers. We need all three pairs to have the same type of relationship.&#x27;],
+      [&#x27;Five people can avoid both groups&#x27;, &#x27;Here is one carefully chosen party of five. Check any three people: some know each other and some are strangers. There is no group of either kind we want.&#x27;],
+      [&#x27;Add a sixth person&#x27;, &#x27;In this example, Fay is a stranger to everyone. Amy, Cara, and Fay are all strangers to each other. But one example is not enough: why must a group exist in every possible party of six?&#x27;],
+      [&#x27;Why six always works: start with you&#x27;, &#x27;You have five relationships. At least three must be the same type: three people know you, or three are strangers to you. Let’s follow the “know you” case.&#x27;],
+      [&#x27;If two of those three know each other…&#x27;, &#x27;Suppose Ben and Cara know each other. They both know you, too. You, Ben, and Cara are three people who all know each other. We found our group.&#x27;],
+      [&#x27;If none of those three know each other…&#x27;, &#x27;Then Ben, Cara, and Dan are all strangers to each other. We found our other kind of group. If we started with three strangers to you, the same argument works with the relationship types swapped.&#x27;],
+      [&#x27;The answer is six&#x27;, &#x27;Five people can avoid both kinds of group. Six people cannot: whatever their relationships, some three all know each other or some three are all strangers to each other. This is the Ramsey result R(3,3) = 6.&#x27;]
+    ];
+    const nextLabels=[&#x27;See three strangers&#x27;,&#x27;See a mixed group&#x27;,&#x27;Why five is not enough&#x27;,&#x27;Add a sixth person&#x27;,&#x27;See why six always works&#x27;,&#x27;If two know each other?&#x27;,&#x27;If none know each other?&#x27;,&#x27;See the answer&#x27;,&#x27;Read from the beginning&#x27;];
+    let step=-1,n=3,colors=[];
+    const pairs=()=&gt;{const e=[];for(let a=0;a&lt;n;a++)for(let b=a+1;b&lt;n;b++)e.push([a,b]);return e};
+    const idx=(a,b)=&gt;pairs().findIndex(e=&gt;e[0]===Math.min(a,b)&amp;&amp;e[1]===Math.max(a,b));
+    const letterList=vs=&gt;vs.map(v=&gt;names[v]).join(&#x27;, &#x27;);
+    function triangles(){const t=[];for(let a=0;a&lt;n;a++)for(let b=a+1;b&lt;n;b++)for(let c=b+1;c&lt;n;c++){const ids=[idx(a,b),idx(a,c),idx(b,c)];if(ids.every(i=&gt;colors[i]===colors[ids[0]]))t.push({v:[a,b,c],ids,color:colors[ids[0]]})}return t}
+    function baseline(count){n=count;colors=pairs().map(([a,b])=&gt;a&lt;5&amp;&amp;b&lt;5&amp;&amp;(b-a===1||b-a===4)?1:0);}
+    function setup(){
+      if(step&lt;0){draw();return}
+      if(step&lt;=2){n=3;colors=step===0?[1,1,1]:step===1?[0,0,0]:[1,0,1]}
+      else if(step===3)baseline(5);
+      else if(step===4||step===8)baseline(6);
+      else {n=6;colors=pairs().map(()=&gt;0);[1,2,3].forEach(b=&gt;colors[idx(0,b)]=1);if(step===6)colors[idx(1,2)]=1}
+      draw();
+    }
+    function save(){const host=window.openai;if(host&amp;&amp;host.setWidgetState)host.setWidgetState({modelContent:{lesson:step&lt;0?&#x27;The party problem&#x27;:lessons[step][0]},privateContent:{version:4,step}}).catch(()=&gt;{})}
+    function el(tag,attrs,parent=svg){const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=&gt;e.setAttribute(k,v));parent.append(e);return e}
+    function draw(){
+      const opening=step&lt;0;
+      root.querySelector(&#x27;h2&#x27;).hidden=!opening;
+      root.querySelector(&#x27;.intro&#x27;).hidden=!opening;
+      root.querySelector(&#x27;.scene&#x27;).hidden=opening;
+      root.querySelector(&#x27;.legend&#x27;).hidden=opening;
+      root.querySelector(&#x27;.narration&#x27;).hidden=opening;
+      root.querySelector(&#x27;.picture&#x27;).hidden=opening;
+      q(&#x27;back&#x27;).disabled=opening;
+      q(&#x27;next&#x27;).textContent=opening?&#x27;Show me an example&#x27;:nextLabels[step];
+      if(opening){svg.replaceChildren();return}
+      const w=Math.max(260,Math.round(root.querySelector(&#x27;.picture&#x27;).getBoundingClientRect().width));
+      const wide=window.matchMedia(&#x27;(min-width:700px)&#x27;).matches;
+      const h=wide?Math.min(440,Math.round(w*.9)):w&lt;340?210:260;
+      const nodeRadius=wide?27:24;
+      svg.setAttribute(&#x27;viewBox&#x27;,`0 0 ${w} ${h}`);svg.style.height=h+&#x27;px&#x27;;svg.replaceChildren();
+      const proof=step&gt;=5&amp;&amp;step&lt;=7;
+      let pts;
+      if(proof){const top=nodeRadius+4,bottom=h-nodeRadius-4,span=bottom-top;pts=[[w/2,top],[nodeRadius+8,top+span*.38],[w/2,top+span*.70],[w-nodeRadius-8,top+span*.38],[w*.23,bottom],[w*.77,bottom]]}
+      else if(n===3)pts=[[w/2,nodeRadius+8],[w-nodeRadius-10,h-nodeRadius-8],[nodeRadius+10,h-nodeRadius-8]];
+      else {const rx=w/2-nodeRadius-10,ry=h/2-nodeRadius-8;pts=Array.from({length:n},(_,i)=&gt;[w/2+rx*Math.cos(-Math.PI/2+2*Math.PI*i/n),h/2+ry*Math.sin(-Math.PI/2+2*Math.PI*i/n)])}
+      let visible=pairs().map((_,i)=&gt;i),active=null;
+      const ts=triangles();
+      if(step&lt;=1)active=ts[0];
+      if(step===4||step===8)active=ts[0];
+      if(proof){visible=pairs().map(([a,b],i)=&gt;a===0||(step===6&amp;&amp;a===1&amp;&amp;b===2)||(step===7&amp;&amp;[1,2,3].includes(a)&amp;&amp;[1,2,3].includes(b))?i:-1).filter(i=&gt;i&gt;=0);if(step===6)active={v:[0,1,2],ids:[idx(0,1),idx(0,2),idx(1,2)],color:1};if(step===7)active={v:[1,2,3],ids:[idx(1,2),idx(1,3),idx(2,3)],color:0}}
+      const title=el(&#x27;title&#x27;,{});title.textContent=lessons[step][0];
+      const desc=el(&#x27;desc&#x27;,{});desc.textContent=lessons[step][1];
+      if(active)el(&#x27;polygon&#x27;,{points:active.v.map(i=&gt;pts[i].join(&#x27;,&#x27;)).join(&#x27; &#x27;),fill:`var(--viz-series-${active.color?1:2})`,&#x27;fill-opacity&#x27;:&#x27;.12&#x27;});
+      visible.forEach(i=&gt;{const [a,b]=pairs()[i],[x1,y1]=pts[a],[x2,y2]=pts[b];const hot=active&amp;&amp;active.ids.includes(i);const dim=active&amp;&amp;!hot||proof&amp;&amp;(a&gt;3||b&gt;3);
+        el(&#x27;line&#x27;,{x1,y1,x2,y2,stroke:`var(--viz-series-${colors[i]?1:2})`,&#x27;stroke-width&#x27;:hot?4:2,&#x27;stroke-dasharray&#x27;:colors[i]?&#x27;none&#x27;:&#x27;7 5&#x27;,opacity:dim?&#x27;.22&#x27;:&#x27;.95&#x27;});
+      });
+      pts.forEach(([x,y],i)=&gt;{el(&#x27;circle&#x27;,{cx:x,cy:y,r:nodeRadius,fill:&#x27;var(--background)&#x27;,stroke:&#x27;var(--border)&#x27;,&#x27;stroke-width&#x27;:1});const t=el(&#x27;text&#x27;,{x,y:y+4,&#x27;text-anchor&#x27;:&#x27;middle&#x27;});t.textContent=proof&amp;&amp;i===0?&#x27;You&#x27;:names[i]});
+      q(&#x27;step&#x27;).textContent=`Step ${step+1} of ${lessons.length}`;q(&#x27;heading&#x27;).textContent=lessons[step][0];q(&#x27;caption&#x27;).textContent=lessons[step][1];
+      q(&#x27;back&#x27;).disabled=false;q(&#x27;next&#x27;).textContent=nextLabels[step];
+      let fact=&#x27;&#x27;;
+      if(step===0)fact=&#x27;Amy knows Ben. Ben knows Cara. Amy knows Cara. All three pairs know each other.&#x27;;
+      else if(step===1)fact=&#x27;Amy and Ben are strangers. Ben and Cara are strangers. Amy and Cara are strangers.&#x27;;
+      else if(step===2)fact=&#x27;Two solid lines + one dashed line: this group does not count.&#x27;;
+      else if(step===3)fact=&#x27;No triangle has three solid lines or three dashed lines. Five is not enough to guarantee a group.&#x27;;
+      else if(step===5)fact=&#x27;The three solid lines lead to Ben, Cara, and Dan. What are their relationships with each other?&#x27;;
+      else if(step===6)fact=&#x27;You know Ben. You know Cara. Ben knows Cara. All three pairs know each other.&#x27;;
+      else if(step===7)fact=&#x27;Ben, Cara, and Dan: three dashed lines, so all three are strangers to each other.&#x27;;
+      else if(active)fact=`Highlighted: ${letterList(active.v)}. ${active.color?&#x27;All three know each other.&#x27;:&#x27;Each is a stranger to both of the others.&#x27;}`;
+      else fact=&#x27;This arrangement has neither kind of group. That is possible with five people.&#x27;;
+      q(&#x27;fact&#x27;).textContent=fact;
+    }
+    q(&#x27;next&#x27;).onclick=()=&gt;{step=step===lessons.length-1?-1:step+1;setup();save()};q(&#x27;back&#x27;).onclick=()=&gt;{if(step&gt;=0){step--;setup();save()}};
+    function restore(state){const s=state&amp;&amp;state.privateContent;if(!s||s.version!==4||!Number.isInteger(s.step)||s.step&lt; -1||s.step&gt;=lessons.length)return false;step=s.step;setup();return true}
+    if(!restore(window.openai&amp;&amp;window.openai.widgetState))setup();
+    window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{if(e.detail&amp;&amp;e.detail.globals)restore(e.detail.globals.widgetState)});
+    new ResizeObserver(()=&gt;draw()).observe(root.querySelector(&#x27;.picture&#x27;));
+  })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (event) =&gt; {
+    for (const target of event.composedPath()) {
+      if (target?.nodeType === Node.ELEMENT_NODE) {
+        const trigger = target.closest(&quot;[data-tooltip]&quot;);
+        if (trigger) return trigger;
+      }
+    }
+    return null;
+  };
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handlers = {
+    pointerover: handlePointerOpen,
+    pointerdown: handlePointer,
+    pointercancel: handlePointer,
+    click: handleTouchClick,
+    pointerout: handleLeave,
+    focusin: handleFocusIn,
+    focusout: handleLeave,
+    keydown: handleKeyDown,
+    contextmenu: handleContextMenu,
+  };
+  const roots = new Map();
+  const handledEvents = new WeakSet();
+  const handleEvent = (event) =&gt; {
+    if (handledEvents.has(event)) return;
+    handledEvents.add(event);
+    handlers[event.type](event);
+  };
+  const discoverRoots = (node) =&gt; {
+    if (node.shadowRoot) listen(node.shadowRoot);
+    for (const element of node.querySelectorAll(&quot;*&quot;)) {
+      if (element.shadowRoot) listen(element.shadowRoot);
+    }
+  };
+  const listen = (root) =&gt; {
+    if (roots.has(root)) return;
+    for (const type of Object.keys(handlers)) root.addEventListener(type, handleEvent);
+    const observer = new window.MutationObserver((records) =&gt; {
+      for (const { addedNodes } of records) {
+        for (const node of addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) discoverRoots(node);
+        }
+      }
+      for (const [root, cleanup] of roots) {
+        if (root.host &amp;&amp; !root.host.isConnected) {
+          cleanup();
+          roots.delete(root);
+        }
+      }
+      if (activeTrigger &amp;&amp; !activeTrigger.isConnected) closeTooltip(false);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    roots.set(root, () =&gt; {
+      observer.disconnect();
+      for (const type of Object.keys(handlers)) root.removeEventListener(type, handleEvent);
+    });
+    discoverRoots(root);
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    for (const cleanup of roots.values()) cleanup();
+    roots.clear();
+    tooltip = null;
+  };
+
+  // Events between children of one shadow root never reach the document.
+  listen(document);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-tabs&quot;&gt;
+(() =&gt; {
+  const selector = &#x27;.nav[role=&quot;tablist&quot;] [role=&quot;tab&quot;]&#x27;;
+  const disabled = &#x27;:disabled,[aria-disabled=&quot;true&quot;]&#x27;;
+  const selectTab = (selected) =&gt; {
+    const panelId = selected.getAttribute(&quot;aria-controls&quot;);
+    for (const tab of selected.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)) {
+      const active = tab === selected;
+      tab.classList.toggle(&quot;active&quot;, active);
+      tab.setAttribute(&quot;aria-selected&quot;, String(active));
+      const id = tab.getAttribute(&quot;aria-controls&quot;);
+      const panel = id &amp;&amp; document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden &amp;&amp; selected.id) {
+          panel.setAttribute(&quot;aria-labelledby&quot;, selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) =&gt; {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === &quot;click&quot;) {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;),
+    ).filter((candidate) =&gt; !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === &quot;ArrowRight&quot; || event.key === &quot;ArrowDown&quot;) {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === &quot;ArrowLeft&quot; || event.key === &quot;ArrowUp&quot;) {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === &quot;Home&quot;) {
+      next = 0;
+    } else if (event.key === &quot;End&quot;) {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll(&#x27;.nav[role=&quot;tablist&quot;]&#x27;)) {
+    const selected =
+      list.querySelector(&#x27;[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;].active&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;]&#x27;);
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener(&quot;click&quot;, interact);
+  document.addEventListener(&quot;keydown&quot;, interact);
+  window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+    document.removeEventListener(&quot;click&quot;, interact);
+    document.removeEventListener(&quot;keydown&quot;, interact);
+  }, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-carousel&quot;&gt;
+  (() =&gt; {
+    for (const root of document.querySelectorAll(&quot;.viz-carousel&quot;)) {
+      const panels = Array.from(
+        root.querySelectorAll(&quot;:scope &gt; [data-variant]&quot;),
+      );
+      if (panels.length === 0) {
+        continue;
+      }
+      root.setAttribute(&quot;role&quot;, &quot;group&quot;);
+      panels.forEach((panel, index) =&gt; {
+        panel.hidden = index !== 0;
+        panel.setAttribute(&quot;role&quot;, &quot;group&quot;);
+        if (!panel.hasAttribute(&quot;aria-label&quot;)) {
+          panel.setAttribute(&quot;aria-label&quot;, panel.dataset.variant);
+        }
+      });
+      root.dataset.activeVariant = panels[0].dataset.variant;
+      if (panels.length === 1) {
+        continue;
+      }
+
+      const controls = document.createElement(&quot;div&quot;);
+      controls.className = &quot;viz-carousel-controls&quot;;
+      // Portable copy of the settings dropdown&#x27;s legacy glyph; no 14px icon-package preset matches it.
+      // https://github.com/openai/openai/blob/master/codex/codex-apps/webview/src/icons/chevron.svg
+      controls.innerHTML = `
+      &lt;button type=&quot;button&quot; class=&quot;viz-carousel-previous cursor-interaction&quot;&gt;&lt;i data-lucide=&quot;chevron-left&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+      &lt;details class=&quot;viz-carousel-picker&quot;&gt;
+        &lt;summary class=&quot;cursor-interaction&quot;&gt;
+          &lt;span class=&quot;viz-carousel-count tabular-nums&quot;&gt;&lt;/span&gt;
+          &lt;span class=&quot;viz-carousel-name&quot;&gt;&lt;/span&gt;
+          &lt;svg class=&quot;viz-carousel-caret&quot; width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 20 21&quot; fill=&quot;none&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;
+            &lt;path d=&quot;M15.2793 7.71101C15.539 7.45131 15.961 7.45131 16.2207 7.71101C16.4804 7.97071 16.4804 8.39272 16.2207 8.65242L10.4707 14.4024C10.211 14.6621 9.78902 14.6621 9.52932 14.4024L3.77932 8.65242L3.69436 8.54792C3.52385 8.28979 3.55205 7.93828 3.77932 7.71101C4.00659 7.48374 4.3581 7.45554 4.61623 7.62605L4.72073 7.71101L10 12.9903L15.2793 7.71101Z&quot; fill=&quot;currentColor&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;0.6&quot; /&gt;
+          &lt;/svg&gt;
+        &lt;/summary&gt;
+        &lt;div class=&quot;viz-carousel-options&quot;&gt;&lt;/div&gt;
+      &lt;/details&gt;
+      &lt;button type=&quot;button&quot; class=&quot;viz-carousel-next cursor-interaction&quot;&gt;&lt;i data-lucide=&quot;chevron-right&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;`;
+      const previous = controls.querySelector(&quot;.viz-carousel-previous&quot;);
+      const next = controls.querySelector(&quot;.viz-carousel-next&quot;);
+      const picker = controls.querySelector(&quot;.viz-carousel-picker&quot;);
+      const summary = picker.querySelector(&quot;summary&quot;);
+      const count = controls.querySelector(&quot;.viz-carousel-count&quot;);
+      const name = controls.querySelector(&quot;.viz-carousel-name&quot;);
+      const options = controls.querySelector(&quot;.viz-carousel-options&quot;);
+      const status = document.createElement(&quot;span&quot;);
+      status.className = &quot;sr-only&quot;;
+      status.setAttribute(&quot;role&quot;, &quot;status&quot;);
+      status.setAttribute(&quot;aria-live&quot;, &quot;polite&quot;);
+      status.setAttribute(&quot;aria-atomic&quot;, &quot;true&quot;);
+      previous.setAttribute(
+        &quot;aria-label&quot;,
+        root.dataset.previousLabel ?? &quot;Previous variant&quot;,
+      );
+      next.setAttribute(&quot;aria-label&quot;, root.dataset.nextLabel ?? &quot;Next variant&quot;);
+
+      let active = 0;
+      let mousePointerId = null;
+      let summaryPointerHandled = false;
+      summary.addEventListener(&quot;pointerdown&quot;, (event) =&gt; {
+        summaryPointerHandled =
+          event.pointerType === &quot;mouse&quot; &amp;&amp; event.button === 0 &amp;&amp; !event.ctrlKey;
+        if (!summaryPointerHandled) {
+          return;
+        }
+        event.preventDefault();
+        summary.focus({ preventScroll: true });
+        picker.open = !picker.open;
+        mousePointerId = picker.open ? event.pointerId : null;
+      });
+      summary.addEventListener(&quot;click&quot;, (event) =&gt; {
+        if (summaryPointerHandled &amp;&amp; event.detail &gt; 0) {
+          event.preventDefault();
+        }
+      });
+      const choices = panels.map((panel, index) =&gt; {
+        const choice = document.createElement(&quot;button&quot;);
+        choice.type = &quot;button&quot;;
+        choice.className = &quot;cursor-interaction&quot;;
+        choice.textContent = panel.dataset.variant;
+        choice.addEventListener(&quot;click&quot;, () =&gt; {
+          select(index);
+          summary.focus();
+        });
+        choice.addEventListener(&quot;pointerup&quot;, (event) =&gt; {
+          if (
+            picker.open &amp;&amp;
+            event.pointerType === &quot;mouse&quot; &amp;&amp;
+            event.button === 0 &amp;&amp;
+            event.pointerId === mousePointerId
+          ) {
+            choice.click();
+          }
+        });
+        options.appendChild(choice);
+        return choice;
+      });
+      const select = (index) =&gt; {
+        const changed = active !== index;
+        active = index;
+        panels.forEach((panel, position) =&gt; {
+          panel.hidden = position !== active;
+          choices[position].setAttribute(
+            &quot;aria-current&quot;,
+            String(position === active),
+          );
+        });
+        root.dataset.activeVariant = panels[active].dataset.variant;
+        count.textContent = `${active + 1} / ${panels.length}`;
+        name.textContent = panels[active].dataset.variant;
+        picker.open = false;
+        mousePointerId = null;
+        if (changed) {
+          status.textContent = `${count.textContent}: ${name.textContent}`;
+        }
+      };
+      previous.addEventListener(&quot;click&quot;, () =&gt;
+        select((active + panels.length - 1) % panels.length),
+      );
+      next.addEventListener(&quot;click&quot;, () =&gt;
+        select((active + 1) % panels.length),
+      );
+      picker.addEventListener(&quot;keydown&quot;, (event) =&gt; {
+        if (event.key === &quot;Escape&quot; &amp;&amp; picker.open) {
+          event.preventDefault();
+          picker.open = false;
+          mousePointerId = null;
+          summary.focus();
+          return;
+        }
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+        const index = choices.indexOf(document.activeElement);
+        let nextIndex;
+        if (event.key === &quot;ArrowDown&quot;) {
+          nextIndex = index &lt; 0 ? active : (index + 1) % choices.length;
+        } else if (event.key === &quot;ArrowUp&quot;) {
+          nextIndex = index &lt; 0 ? active : (index + choices.length - 1) % choices.length;
+        } else if (picker.open &amp;&amp; event.key === &quot;Home&quot;) {
+          nextIndex = 0;
+        } else if (picker.open &amp;&amp; event.key === &quot;End&quot;) {
+          nextIndex = choices.length - 1;
+        } else {
+          return;
+        }
+        event.preventDefault();
+        picker.open = true;
+        choices[nextIndex].focus();
+      });
+      picker.addEventListener(&quot;focusout&quot;, (event) =&gt; {
+        if (!picker.contains(event.relatedTarget)) {
+          picker.open = false;
+          mousePointerId = null;
+        }
+      });
+      const dismiss = (event) =&gt; {
+        if (!summary.contains(event.target)) {
+          mousePointerId = null;
+        }
+        if (!picker.contains(event.target)) {
+          picker.open = false;
+        }
+      };
+      const endPointerSelection = () =&gt; {
+        mousePointerId = null;
+      };
+      const sizePicker = () =&gt; {
+        root.style.setProperty(
+          &quot;--viz-carousel-picker-height&quot;,
+          `${picker.open ? options.offsetHeight : 0}px`,
+        );
+      };
+      picker.addEventListener(&quot;toggle&quot;, sizePicker);
+      window.addEventListener(&quot;resize&quot;, sizePicker);
+      document.addEventListener(&quot;pointerdown&quot;, dismiss);
+      document.addEventListener(&quot;pointerup&quot;, endPointerSelection);
+      document.addEventListener(&quot;pointercancel&quot;, endPointerSelection);
+      window.addEventListener(&quot;blur&quot;, endPointerSelection);
+      window.addEventListener(
+        &quot;pagehide&quot;,
+        () =&gt; {
+          document.removeEventListener(&quot;pointerdown&quot;, dismiss);
+          document.removeEventListener(&quot;pointerup&quot;, endPointerSelection);
+          document.removeEventListener(&quot;pointercancel&quot;, endPointerSelection);
+          window.removeEventListener(&quot;blur&quot;, endPointerSelection);
+          window.removeEventListener(&quot;resize&quot;, sizePicker);
+        },
+        { once: true },
+      );
+      root.append(controls, status);
+      select(0);
+    }
+  })();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+<script>(() => {
+  const frame = document.getElementById("codex-visualization");
+  if (!(frame instanceof HTMLIFrameElement)) {
+    return;
+  }
+  let viewportHeight = globalThis.innerHeight;
+  const storageKey = `codex:visualization-widget-state-v2:${JSON.stringify([
+    globalThis.location.pathname,
+    globalThis.location.search,
+  ])}`;
+  const parseState = (serializedState) => {
+    if (
+      typeof serializedState !== "string" ||
+      new TextEncoder().encode(serializedState).length > 16 * 1024
+    ) {
+      throw new TypeError(
+        "Widget state must be a JSON object of at most 16 KiB",
+      );
+    }
+    /** @type {unknown} */
+    const state = JSON.parse(serializedState);
+    if (
+      state == null ||
+      typeof state !== "object" ||
+      Array.isArray(state) ||
+      ("imageIds" in state &&
+        (!Array.isArray(state.imageIds) || state.imageIds.length > 0))
+    ) {
+      throw new TypeError("Widget state must be a JSON object");
+    }
+    const storedState = { modelContent: null, privateContent: null, ...state };
+    const canonicalState = JSON.stringify(
+      storedState,
+      (_key, /** @type {unknown} */ value) => {
+        if (typeof value === "number" && !Number.isFinite(value)) {
+          throw new TypeError("Widget state must contain finite numbers");
+        }
+        return value;
+      },
+    );
+    if (new TextEncoder().encode(canonicalState).length > 16 * 1024) {
+      throw new TypeError(
+        "Widget state must be a JSON object of at most 16 KiB",
+      );
+    }
+    return storedState;
+  };
+  let storage = null;
+  let state = null;
+  try {
+    const localStorage = globalThis.localStorage;
+    const probeKey = `${storageKey}:probe`;
+    localStorage.setItem(probeKey, "1");
+    localStorage.removeItem(probeKey);
+    storage = localStorage;
+    const savedState = storage.getItem(storageKey);
+    if (savedState != null) {
+      try {
+        state = parseState(savedState);
+      } catch {
+        // Invalid saved state does not disable future writes.
+      }
+    }
+  } catch {
+    storage = null;
+  }
+  const initialGlobals = {
+    widgetState: state,
+    statePersistence: storage == null ? "none" : "local",
+  };
+
+  const channel = new MessageChannel();
+  channel.port1.addEventListener("message", (event) => {
+    const data = event.data;
+    if (typeof data !== "object" || data == null) {
+      return;
+    }
+    if (data.type === "widget-state-write") {
+      if (!Number.isSafeInteger(data.id) || data.id <= 0) {
+        return;
+      }
+      let ok = false;
+      try {
+        if (storage != null) {
+          const state = parseState(data.state);
+          storage.setItem(storageKey, JSON.stringify(state));
+          ok = true;
+        }
+      } catch {
+        // Storage denial, quota limits, and invalid state return a failed receipt.
+      }
+      channel.port1.postMessage({
+        type: "widget-state-result",
+        id: data.id,
+        ok,
+      });
+      return;
+    }
+    if (data.type === "height") {
+      const height = data.height;
+      if (
+        typeof height === "number" &&
+        Number.isFinite(height) &&
+        height >= 0 &&
+        height <= 10_000
+      ) {
+        frame.style.height = Math.ceil(height) + "px";
+      }
+      return;
+    }
+    if (data.type === "scroll-to") {
+      const top = data.top;
+      if (
+        typeof top === "number" &&
+        Number.isFinite(top) &&
+        top >= 0 &&
+        globalThis.navigator.userActivation?.isActive === true
+      ) {
+        globalThis.scrollTo({
+          top: Math.ceil(
+            globalThis.scrollY + frame.getBoundingClientRect().top + top,
+          ),
+        });
+      }
+      return;
+    }
+    if (data.type === "open-external") {
+      const rawHref = data.href;
+      if (typeof rawHref !== "string") {
+        return;
+      }
+      let href;
+      try {
+        const url = new URL(rawHref, document.baseURI);
+        if (url.protocol !== "https:") {
+          return;
+        }
+        href = url.href;
+      } catch {
+        return;
+      }
+      if (globalThis.navigator.userActivation?.isActive === true) {
+        const anchor = document.createElement("a");
+        anchor.href = href;
+        anchor.rel = "noopener noreferrer";
+        anchor.target = "_blank";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      }
+      return;
+    }
+    if (data.type === "follow-up") {
+      const prompt = data.prompt;
+      if (
+        typeof prompt !== "string" ||
+        globalThis.navigator.userActivation?.isActive !== true
+      ) {
+        return;
+      }
+      const title = data.title;
+      globalThis.prompt(typeof title === "string" ? title : prompt, prompt);
+    }
+  });
+  channel.port1.start();
+  const srcdoc = frame.dataset.srcdoc;
+  if (srcdoc == null) {
+    return;
+  }
+  globalThis.addEventListener("resize", () => {
+    const height = Number.parseFloat(frame.style.height);
+    if (!Number.isFinite(height) || height <= viewportHeight) {
+      frame.style.removeProperty("height");
+    }
+    viewportHeight = globalThis.innerHeight;
+    channel.port1.postMessage({ type: "measure" });
+  });
+  frame.addEventListener(
+    "load",
+    () => {
+      frame.contentWindow?.postMessage(
+        { type: "codex-visualization-initialize" },
+        "*",
+        [channel.port2],
+      );
+    },
+    { once: true },
+  );
+  // Match the trusted bootstrap element, not the same text in an authored title.
+  frame.srcdoc = srcdoc.replace(
+    '<script type="application/json" id="codex-visualization-widget-state">__CODEX_VISUALIZATION_WIDGET_STATE__<\/script>',
+    () =>
+      '<script type="application/json" id="codex-visualization-widget-state">' +
+      JSON.stringify(initialGlobals).replaceAll("<", "\\u003c") +
+      "<\/script>",
+  );
+  delete frame.dataset.srcdoc;
 })();
 </script>
 </body>

@@ -26,7 +26,3 @@ The lead agent assembled the proof, added the counting proof of the stronger two
 - Counts refer to labeled graphs with fixed color names; no symmetry reduction was used.
 - Random examples in the visualization illustrate behavior. The exhaustive verifier and mathematical argument establish the result.
 - This is not a literature review or a proof-assistant formalization.
-
-## Playable presentation
-
-The original graph walkthrough was replaced with Ramsey’s Garden after feedback that the explanation was too text-heavy and the picture too abstract. The garden uses selectable characters and shows only the relationships currently being explored. Its two proof scenes use the same argument in PROOF.md; the artwork introduces no new assumptions. Casa de Gemas inspired the watercolor-world presentation. The implementation and illustrations are original.

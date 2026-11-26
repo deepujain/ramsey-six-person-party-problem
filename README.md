@@ -1,10 +1,12 @@
-# Ramsey’s Garden · the six-person party problem
+# Ramsey six-person party problem
 
-**[Play in your browser](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no download, installation, or account.
+A small, reproducible example of agent-assisted mathematical research, with an interactive visualization and a complete proof.
 
-A watercolor garden party with a mathematical secret. Tap the guests, follow the ribbons, and discover why inviting one more person makes a pattern unavoidable.
+**[Play the walkthrough in your browser](https://deepujain.github.io/ramsey-six-person-party-problem/)** — no checkout, download, or installation needed.
 
-![An illustrated garden party. Amy, Cara, and Fay are selected; their three blue ribbons show that they are all strangers to each other.](docs/images/party-problem-walkthrough.png)
+**Problem:** What is the smallest number of people that guarantees either three mutual acquaintances or three mutual strangers? Relationships are mutual, and every pair is classified into exactly one of these categories.
+
+**Answer: 6**, the classical Ramsey number R(3,3). This repository demonstrates an established theorem; it does not claim a new result or a solution to an open problem.
 
 ## The problem in simple words
 
@@ -15,29 +17,25 @@ We're looking for a group of three where either:
 - **All three know each other**, or
 - **None of the three know each other**.
 
-**How many people must attend to guarantee that one of these groups exists?**
+The question is: **How many people must attend to guarantee that one of these groups exists?**
 
-The answer is **six**, the classical Ramsey number R(3,3). Five people can avoid both kinds of group. Six cannot, whatever their relationships. This is a demonstration of an established theorem, not a claim of a new discovery.
+The answer is **six**. With five people, it's possible to avoid both kinds of group. With six, one must exist—whatever their relationships.
 
-## How to play
+In the visualization, each dot is a person. Solid lines mean "know each other"; dashed lines mean "strangers." You're looking for a triangle made of **three solid lines or three dashed lines**.
 
-1. Meet the five guests. Tap any three names to reveal their relationships. Gold ribbons mean they know each other; dashed blue ribbons mean they have never met. This particular party of five has no matching trio.
-2. Invite Fay, the sixth guest. Find a trio with three matching ribbons. Tap the owl if you want a hint.
-3. Discover why six always works through two illustrated possibilities. Then host another party with different relationships and find its hidden trio.
+## Visual walkthrough
 
-The artwork fills the screen, with touch and keyboard controls and no page scrolling at the tested phone and desktop sizes. Sound is optional and off by default. Reduced-motion preferences are respected. “The puzzle” opens the full plain-language explanation.
+![The walkthrough highlights Ben, Cara, and Dan connected by three dashed lines, meaning all three are strangers to each other.](docs/images/party-problem-walkthrough.png)
 
-**Offline:** download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser.
+Here, Ben, Cara, and Dan are all strangers to each other. Their three dashed connections form one of the groups we are looking for.
 
-## A little world, one file
+## Explore
 
-`index.html` is both the source and the runnable game. Original Canvas 2D illustration, painted scenery, selectable characters, gently moving characters, and optional Web Audio chimes. No images, external libraries, external fonts, network requests, or build step are needed to play.
+Click **[Play the walkthrough](https://deepujain.github.io/ramsey-six-person-party-problem/)** to run it immediately in your browser. For offline use, download [index.html](https://github.com/deepujain/ramsey-six-person-party-problem/raw/refs/heads/main/index.html) and open it in a modern browser. No installation is required. The page starts by explaining the party problem in plain words, then walks through nine illustrated steps, one compact screen at a time. The opening explanation appears on its own screen so it does not push the pictures and buttons below the fold. On larger screens, the explanation sits beside a larger diagram; on phones, the diagram uses the available width. Each forward button describes the next example. There are no relationship selectors or editing controls to learn. Solid lines mean two people know each other; dashed lines mean they are strangers. Only the named circles are people; crossings between lines are not extra people.
 
-The visual approach is inspired by [Casa de Gemas](https://github.com/deepujain/casadegema): a hand-painted world, interactions in the scene, and short hints from an owl. The garden illustration and implementation here are original; this is not a copy of its game or source.
+The editable source is `six-person-lab.html`; `index.html` is its standalone export, including presentation support. The fragment can also render inline in Codex.
 
-The complete human-readable argument is in [PROOF.md](PROOF.md). The parallel agents’ investigation is recorded in [RESEARCH.md](RESEARCH.md).
-
-## Reproduce the mathematical check
+## Reproduce the computation
 
 Python 3.9 or later, with no third-party dependencies:
 
@@ -45,25 +43,25 @@ Python 3.9 or later, with no third-party dependencies:
 python3 verify.py
 ```
 
-This enumerates every labeled two-coloring for 3 through 6 vertices, checks every vertex triple, verifies the pentagon counterexample and the tight two-triangle example, and prints machine-readable JSON.
+The verifier enumerates every labeled two-coloring for 3 through 6 vertices, checks every vertex triple, asserts independently expected counts, checks the explicit pentagon counterexample, and prints machine-readable JSON. Six vertices require checking 32,768 colorings, each containing 20 triples.
 
-| People | Possible relationship arrangements | Arrangements with neither kind of trio |
+| People | Colorings | Colorings avoiding both types of triangle |
 | --- | ---: | ---: |
 | 3 | 8 | 6 |
 | 4 | 64 | 18 |
 | 5 | 1,024 | 12 |
 | 6 | 32,768 | 0 |
 
-The garden’s initial five-person arrangement is two complementary five-cycles. Adding Fay as a stranger to everyone reveals a trio. A single example alone does not establish the guarantee; the two-case proof and exhaustive check do.
+Read [PROOF.md](PROOF.md) for the mathematical proof and [RESEARCH.md](RESEARCH.md) for the parallel investigation and rejected hypothesis.
 
-The proof is for human review, not a proof-assistant formalization.
+The proof is written for human review; it is not machine-checked in a proof assistant. Exhaustive enumeration checks this finite instance independently. A browser is an exploration tool, not the basis of the proof.
 
 ## Optional browser checks
 
-With Playwright and Chromium installed in your development environment:
+With Playwright and its Chromium browser installed in your development environment, run:
 
 ```sh
 node test_ui.cjs
 ```
 
-Set `CHROME_CHANNEL=chrome` to use installed Google Chrome. Tests cover the five-person counterexample, successful discovery with six, both proof cases, a randomized party, the rules dialog, and layout on phones, tablets, desktops, and a landscape phone. Optional screenshots are written to an existing directory given by `SCREENSHOT_DIR`.
+Set `CHROME_CHANNEL=chrome` to use an installed Google Chrome instead. The checks walk through all nine steps at phone and desktop widths, verify the example diagrams and navigation, and check for horizontal overflow and JavaScript errors. The visualization itself needs no dependencies.
