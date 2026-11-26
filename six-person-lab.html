@@ -1,0 +1,78 @@
+<div id="ramsey-lab">
+  <style>
+    #ramsey-lab .topline {display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0}
+    #ramsey-lab .legend {display:flex;gap:20px;flex-wrap:wrap;margin:12px 0}
+    #ramsey-lab .key {display:inline-block;width:24px;vertical-align:middle;margin-right:6px;border-top:3px solid var(--viz-series-1)}
+    #ramsey-lab .key.strangers {border-color:var(--viz-series-2);border-top-style:dashed}
+    #ramsey-lab .graph {width:100%;display:block;overflow:visible}
+    #ramsey-lab .edge {cursor:inherit}
+    #ramsey-lab .status {min-height:28px;margin:10px 0;color:var(--foreground);font-weight:500}
+    #ramsey-lab .fields {display:flex;flex-wrap:wrap;align-items:end;gap:12px}
+    #ramsey-lab .field {display:grid;gap:5px}
+    #ramsey-lab .field select {min-width:100px}
+    #ramsey-lab text {fill:var(--foreground);font-weight:500}
+    #ramsey-lab .sub {color:var(--muted-foreground)}
+  </style>
+  <h3>The sixth person changes everything</h3>
+  <div class="topline">
+    <button type="button" class="btn" id="rl-five" aria-pressed="true">5 people · counterexample</button>
+    <button type="button" class="btn" id="rl-six" aria-pressed="false">6 people · guarantee</button>
+  </div>
+  <div class="legend text-small">
+    <span><span class="key"></span>Acquaintances · solid</span>
+    <span><span class="key strangers"></span>Strangers · dashed</span>
+  </div>
+  <svg id="rl-graph" class="graph" role="img" aria-label="An editable network of people. Each line represents acquaintances or strangers."></svg>
+  <div id="rl-status" class="status tabular-nums" aria-live="polite"></div>
+  <div class="fields">
+    <label class="field form-label" for="rl-pair">Relationship<select class="form-select" id="rl-pair"></select></label>
+    <button type="button" class="btn" id="rl-flip">Flip relationship</button>
+    <button type="button" class="btn" id="rl-random">Randomize</button>
+    <button type="button" class="btn" id="rl-witness">Highlight triangle</button>
+  </div>
+  <div class="text-small sub" id="rl-detail" aria-live="polite" style="margin-top:12px"></div>
+  <script>
+  (() => {
+    const root=document.getElementById('ramsey-lab');
+    const q=id=>root.querySelector('#rl-'+id);
+    const svg=q('graph'), ns='http://www.w3.org/2000/svg';
+    let n=5, colors=[], selected=0, witness=-1;
+    const pairs=()=>{const e=[];for(let a=0;a<n;a++)for(let b=a+1;b<n;b++)e.push([a,b]);return e};
+    const idx=(a,b)=>pairs().findIndex(e=>e[0]===Math.min(a,b)&&e[1]===Math.max(a,b));
+    function triangles(){const t=[];for(let a=0;a<n;a++)for(let b=a+1;b<n;b++)for(let c=b+1;c<n;c++){const ids=[idx(a,b),idx(a,c),idx(b,c)];if(ids.every(i=>colors[i]===colors[ids[0]]))t.push({v:[a,b,c],ids,color:colors[ids[0]]})}return t}
+    function baseline(count){n=count;colors=pairs().map(([a,b])=>a<5&&b<5&&(b-a===1||b-a===4)?1:0);selected=0;witness=-1;options();draw()}
+    function options(){q('pair').replaceChildren();pairs().forEach(([a,b],i)=>{const o=document.createElement('option');o.value=i;o.textContent=String.fromCharCode(65+a)+' – '+String.fromCharCode(65+b);q('pair').append(o)});q('pair').value=selected}
+    function save(){const host=window.openai;if(host&&host.setWidgetState)host.setWidgetState({modelContent:{people:n,acquaintanceEdges:pairs().filter((e,i)=>colors[i]).map(e=>e.map(v=>String.fromCharCode(65+v)).join('')),monochromaticTriangles:triangles().length},privateContent:{n,colors,selected,witness}}).catch(()=>{})}
+    function el(tag,attrs,parent=svg){const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));parent.append(e);return e}
+    function draw(){
+      const width=Math.max(280,Math.round(root.getBoundingClientRect().width));
+      const height=Math.min(390,width*.8+70),cx=width/2,cy=height/2,r=Math.min(width*.36,height*.38);
+      svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.height=height+'px';svg.replaceChildren();
+      const pts=Array.from({length:n},(_,i)=>[cx+r*Math.cos(-Math.PI/2+2*Math.PI*i/n),cy+r*Math.sin(-Math.PI/2+2*Math.PI*i/n)]);
+      const ts=triangles();if(witness>=ts.length)witness=-1;const active=witness>=0?ts[witness]:null;
+      const title=el('title',{});title.textContent=`${n} people, ${ts.length} same-type triangles`;
+      if(active)el('polygon',{points:active.v.map(i=>pts[i].join(',')).join(' '),fill:`var(--viz-series-${active.color?1:2})`,'fill-opacity':'.12'});
+      pairs().forEach(([a,b],i)=>{const hot=active&&active.ids.includes(i),[x1,y1]=pts[a],[x2,y2]=pts[b];const color=`var(--viz-series-${colors[i]?1:2})`;
+        if(i===selected)el('line',{x1,y1,x2,y2,stroke:'var(--foreground)','stroke-width':8,'stroke-opacity':'.12'});
+        el('line',{x1,y1,x2,y2,stroke:color,'stroke-width':hot?4:2,'stroke-dasharray':colors[i]?'none':'7 5',opacity:active&&!hot?'.28':'.85','pointer-events':'none'});
+        const hit=el('line',{x1,y1,x2,y2,stroke:'transparent','stroke-width':14,class:'edge cursor-interaction','aria-hidden':'true'});
+        hit.addEventListener('click',()=>{selected=i;q('pair').value=i;colors[i]=1-colors[i];witness=-1;draw();save()});
+      });
+      pts.forEach(([x,y],i)=>{el('circle',{cx:x,cy:y,r:17,fill:'var(--background)',stroke:'var(--border)','stroke-width':1});const t=el('text',{x,y:y+5,'text-anchor':'middle'});t.textContent=String.fromCharCode(65+i)});
+      q('five').setAttribute('aria-pressed',n===5);q('six').setAttribute('aria-pressed',n===6);
+      q('status').textContent=ts.length===0?'0 same-type triangles · this arrangement avoids both':`${ts.length} same-type triangle${ts.length===1?'':'s'} · ${ts.filter(t=>t.color).length} acquaintances, ${ts.filter(t=>!t.color).length} strangers`;
+      q('witness').disabled=!ts.length;
+      const [a,b]=pairs()[selected];q('detail').textContent=active?`Highlighted: ${active.v.map(v=>String.fromCharCode(65+v)).join(' · ')} — mutual ${active.color?'acquaintances':'strangers'}.`:`${String.fromCharCode(65+a)} – ${String.fromCharCode(65+b)}: ${colors[selected]?'acquaintances':'strangers'} · Crossings are not people.`;
+    }
+    q('five').onclick=()=>{baseline(5);save()};q('six').onclick=()=>{baseline(6);witness=0;draw();save()};
+    q('pair').onchange=()=>{selected=Number(q('pair').value);draw();save()};
+    q('flip').onclick=()=>{colors[selected]=1-colors[selected];witness=-1;draw();save()};
+    q('random').onclick=()=>{colors=colors.map(()=>Math.random()<.5?0:1);witness=-1;draw();save()};
+    q('witness').onclick=()=>{const ts=triangles();witness=(witness+1)%ts.length;draw();save()};
+    function restore(state){const s=state&&state.privateContent;if(s&&[5,6].includes(s.n)&&Array.isArray(s.colors)&&s.colors.length===s.n*(s.n-1)/2&&s.colors.every(c=>c===0||c===1)){n=s.n;colors=s.colors.slice();selected=Number.isInteger(s.selected)&&s.selected>=0&&s.selected<colors.length?s.selected:0;witness=Number.isInteger(s.witness)&&s.witness>=-1?s.witness:-1;options();draw();return true}return false}
+    if(!restore(window.openai&&window.openai.widgetState))baseline(5);
+    window.addEventListener('openai:set_globals',e=>{if(e.detail&&e.detail.globals)restore(e.detail.globals.widgetState)});
+    new ResizeObserver(()=>draw()).observe(root);
+  })();
+  </script>
+</div>
